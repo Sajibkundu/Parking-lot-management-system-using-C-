@@ -95,9 +95,9 @@ To run the compiled program from the terminal:
 The system begins with a main menu offering access to the different panels and features.
 
 ```
-=======================================
-SMART PARKING LOT MANAGEMENT SYSTEM
-=======================================
+===========================================
+🅂🄼🄰🅁🅃 🄿🄰🅁🄺🄸🄽🄶 🄻🄾🅃 🄼🄰🄽🄰🄶🄴🄼🄴🄽🅃 🅂🅈🅂🅃🄴🄼
+============================================
 1. Login as User
 2. Login as Admin
 3. Register as New User
