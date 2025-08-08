@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-// --- Global Constants and Definitions ---
+
 #define USERS_FILE "users.txt"
 #define MAX_NAME_LEN 50
 #define MAX_EMAIL_LEN 50
@@ -12,7 +12,7 @@
 #define MAX_PASSWORD_LEN 20
 #define MAX_LINE_LEN 256 // Increased line buffer for safety
 
-// --- Data Structure for User ---
+
 typedef struct {
     char name[MAX_NAME_LEN];
     char email[MAX_EMAIL_LEN];
@@ -21,7 +21,7 @@ typedef struct {
     char password[MAX_PASSWORD_LEN];
 } User;
 
-// --- Function Prototypes ---
+
 void clearScreen();
 void clearInputBuffer();
 void mainMenu();
@@ -38,13 +38,13 @@ int isEmailRegistered(char email[]);
 int isFieldExist(const char* filename, int fieldIndex, const char* value);
 
 
-// --- Main Function ---
+
 int main() {
     mainMenu();
     return 0;
 }
 
-// --- Utility Functions ---
+
 void clearScreen() {
     // Check for operating system to use the correct command
 #ifdef _WIN32
@@ -74,7 +74,7 @@ void mainMenu() {
         printf("---------------------------------------------\n");
         printf("Enter your choice (1-4): ");
         if (scanf("%d", &choice) != 1) {
-            printf("\n❌ Invalid input! Please enter a number.\n");
+            printf("\n Invalid input! Please enter a number.\n");
             clearInputBuffer();
             system("pause");
             continue;
@@ -89,13 +89,13 @@ void mainMenu() {
                 printf("\nThank you for using the system. Goodbye!\n");
                 exit(0);
             default:
-                printf("\n❌ Invalid choice. Please try again.\n");
+                printf("\n Invalid choice. Please try again.\n");
                 system("pause");
         }
     }
 }
 
-// --- Admin Panel (Simplified Conditional Logic) ---
+
 void adminPanel() {
     char username[30], password[MAX_PASSWORD_LEN];
     clearScreen();
@@ -110,7 +110,7 @@ void adminPanel() {
     if (strcmp(username, "admin") == 0) {
         if (strcmp(password, "123") == 0) {
             printf("\n✅ Login successful! Welcome, Admin.\n");
-            // Placeholder for admin dashboard functionality
+            
         } else {
             printf("\n❌ Invalid password!\n");
         }
@@ -150,7 +150,7 @@ void userPanel() {
     }
 }
 
-// --- User Registration ---
+// User Registration 
 void userRegistration() {
     User new_user;
     char password_confirm[MAX_PASSWORD_LEN];
@@ -168,7 +168,7 @@ void userRegistration() {
         fgets(new_user.email, sizeof(new_user.email), stdin);
         new_user.email[strcspn(new_user.email, "\n")] = 0;
         if (isValidEmail(new_user.email) && !isEmailRegistered(new_user.email)) break;
-        else printf("❌ Invalid or already registered email! Please try again.\n");
+        else printf(" Invalid or already registered email! Please try again.\n");
     }
 
     while (1) {
@@ -176,7 +176,7 @@ void userRegistration() {
         fgets(new_user.phone, sizeof(new_user.phone), stdin);
         new_user.phone[strcspn(new_user.phone, "\n")] = 0;
         if (isValidPhone(new_user.phone)) break;
-        else printf("❌ Invalid phone number! Must be 11 digits and start with 01.\n");
+        else printf(" Invalid phone number! Must be 11 digits and start with 01.\n");
     }
 
     while (1) {
@@ -184,7 +184,7 @@ void userRegistration() {
         fgets(new_user.nid, sizeof(new_user.nid), stdin);
         new_user.nid[strcspn(new_user.nid, "\n")] = 0;
         if (isValidNID(new_user.nid)) break;
-        else printf("❌ Invalid NID! Must be 10 or 17 digits.\n");
+        else printf(" Invalid NID! Must be 10 or 17 digits.\n");
     }
     
     while(1) {
@@ -199,13 +199,13 @@ void userRegistration() {
         if (strcmp(new_user.password, password_confirm) == 0 && strlen(new_user.password) > 0) {
             break;
         } else {
-            printf("❌ Passwords do not match or are empty. Please try again.\n");
+            printf(" Passwords do not match or are empty. Please try again.\n");
         }
     }
 
     fp = fopen(USERS_FILE, "a");
     if (fp == NULL) {
-        printf("\n❌ Error: Could not open file to save user data!\n");
+        printf("\n Error: Could not open file to save user data!\n");
         system("pause");
         return;
     }
@@ -213,7 +213,7 @@ void userRegistration() {
     fprintf(fp, "%s|%s|%s|%s|%s\n", new_user.name, new_user.email, new_user.phone, new_user.nid, new_user.password);
     fclose(fp);
 
-    printf("\n✅ Registration successful! Please log in to continue.\n");
+    printf("\n Registration successful! Please log in to continue.\n");
     system("pause");
 }
 
@@ -243,7 +243,7 @@ void userLogin() {
     }
 
     while (fgets(line, sizeof(line), fp)) {
-        // Use safer sscanf format string
+        
         sscanf(line, "%[^|]|%[^|]|%[^|]|%[^|]|%[^\n]",
                current_user.name, current_user.email, current_user.phone, current_user.nid, current_user.password);
 
@@ -256,7 +256,7 @@ void userLogin() {
     fclose(fp);
 
     if (login_success) {
-        printf("\n✅ Login successful! Welcome, %s.\n", current_user.name);
+        printf("\n Login successful! Welcome, %s.\n", current_user.name);
         system("pause");
         userDashboard(current_user.name);
     } else {
@@ -265,7 +265,7 @@ void userLogin() {
     }
 }
 
-// --- User Dashboard (Placeholder) ---
+// User Dashboard 
 void userDashboard(char username[]) {
     int choice;
     while(1) {
@@ -300,13 +300,13 @@ void userDashboard(char username[]) {
                 printf("\nLogging out...\n");
                 return;
             default:
-                printf("\n❌ Invalid choice.\n");
+                printf("\n Invalid choice.\n");
                 system("pause");
         }
     }
 }
 
-// --- About the System ---
+// About the System 
 void aboutSystem() {
     clearScreen();
     printf("=== About Smart Parking System ===\n");
@@ -321,7 +321,7 @@ void aboutSystem() {
     system("pause");
 }
 
-// --- Validation Functions ---
+// Validation -
 int isValidEmail(char email[]) {
     char* at_sign = strchr(email, '@');
     char* dot_sign = strchr(email, '.');
