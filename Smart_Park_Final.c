@@ -2514,3 +2514,5 @@ void admin_generate_daily_report() {
 
     pause_screen();
 }
+
+
