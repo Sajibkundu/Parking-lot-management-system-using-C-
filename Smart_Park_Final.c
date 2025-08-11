@@ -484,7 +484,7 @@ void clear_screen() {
 
 void print_header() {
     print_ascii_header();
-    printCentered("*** SMART PARKING MANAGEMENT SYSTEM ***", YELLOW);
+    printCentered("*** SMART PARKING LOT MANAGEMENT SYSTEM ***", YELLOW);
     printCenteredLine('=', LIGHTCYAN);
     printCentered("WELCOME OUR SYSTEM", LIGHTGREEN);
     printCenteredLine('=', LIGHTCYAN);
