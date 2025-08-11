@@ -23,6 +23,7 @@
 #define BIKE_SLOTS 40
 #define CAR_SLOTS 40
 #define TRUCK_SLOTS 20
+#define CONSOLE_WIDTH 80
 
 // Pricing per hour
 #define BIKE_PRICE 10.0
@@ -60,6 +61,48 @@ void resetColor() {
     setColor(WHITE);
 #endif
 }
+
+// Center alignment function
+void printCentered(const char* text, int color) {
+    int len = strlen(text);
+    int padding = (CONSOLE_WIDTH - len) / 2;
+    setColor(color);
+    for (int i = 0; i < padding; i++) {
+        printf(" ");
+    }
+    printf("%s\n", text);
+    resetColor();
+}
+
+void printCenteredLine(char ch, int color) {
+    setColor(color);
+    for (int i = 0; i < CONSOLE_WIDTH; i++) {
+        printf("%c", ch);
+    }
+    printf("\n");
+    resetColor();
+}
+
+// ASCII Header Function
+void print_ascii_header() {
+    setColor(LIGHTCYAN);
+    printf("\n");
+    printCentered("  _____  __  __      ___      _____  _______     _____    ___      _____   _  __", LIGHTCYAN);
+    printCentered(" / ____||  \\/  |    /   \\    |  __ \\|__   __|   |  __ \\  /   \\    |  __ \\ | |/ /", LIGHTCYAN);
+    printCentered("| (___  | \\  / |   /  ^  \\   | |__) |  | |      | |__) |/  ^  \\   | |__) || ' / ", LIGHTCYAN);
+    printCentered(" \\___ \\ | |\\/| |  /  /_\\  \\  |  _  /   | |      |  ___//  /_\\  \\  |  _  / |  <  ", LIGHTCYAN);
+    printCentered(" ____) || |  | | /  _____  \\ | | \\ \\   | |      | |   /  _____  \\ | | \\ \\ | . \\ ", LIGHTCYAN);
+    printCentered("|_____/ |_|  |_|/__/     \\__\\|_|  \\_\\  |_|      |_|  /__/     \\__\\|_|  \\_\\|_|\\_\\", LIGHTCYAN);
+    printCentered("                |__|     |__|                        |__|     |__|              ", LIGHTCYAN);
+    printf("\n");
+    resetColor();
+}
+
+
+
+
+
+
 
 // Data Structures
 typedef struct {
@@ -224,6 +267,9 @@ void initialize_slots() {
 void load_data() {
     FILE *file;
 
+    printCentered("Loading system data...", LIGHTCYAN);
+    printf("\n");
+
     // Load users from users.txt
     file = fopen("users.txt", "r");
     if (file != NULL) {
@@ -236,13 +282,11 @@ void load_data() {
             if (user_count >= MAX_USERS) break;
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Loaded %d users from users.txt\n", user_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Loaded %d users from users.txt", user_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(YELLOW);
-        printf("users.txt not found - starting with empty user database\n");
-        resetColor();
+        printCentered("users.txt not found - starting with empty user database", YELLOW);
     }
 
     // Load vehicles from vehicles.txt
@@ -256,13 +300,11 @@ void load_data() {
             if (vehicle_count >= MAX_VEHICLES) break;
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Loaded %d vehicles from vehicles.txt\n", vehicle_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Loaded %d vehicles from vehicles.txt", vehicle_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(YELLOW);
-        printf("vehicles.txt not found - starting with empty vehicle database\n");
-        resetColor();
+        printCentered("vehicles.txt not found - starting with empty vehicle database", YELLOW);
     }
 
     // Load slots from slots.txt (only if not already initialized)
@@ -277,13 +319,11 @@ void load_data() {
                 if (slot_count >= MAX_SLOTS) break;
             }
             fclose(file);
-            setColor(LIGHTGREEN);
-            printf("Loaded %d slots from slots.txt\n", slot_count);
-            resetColor();
+            char msg[100];
+            sprintf(msg, "Loaded %d slots from slots.txt", slot_count);
+            printCentered(msg, LIGHTGREEN);
         } else {
-            setColor(YELLOW);
-            printf("slots.txt not found - initializing default slots\n");
-            resetColor();
+            printCentered("slots.txt not found - initializing default slots", YELLOW);
             initialize_slots();
         }
     }
@@ -305,13 +345,11 @@ void load_data() {
             if (reservation_count >= MAX_RESERVATIONS) break;
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Loaded %d reservations from reservations.txt\n", reservation_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Loaded %d reservations from reservations.txt", reservation_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(YELLOW);
-        printf("reservations.txt not found - starting with empty reservation database\n");
-        resetColor();
+        printCentered("reservations.txt not found - starting with empty reservation database", YELLOW);
     }
 
     // Load payments from payments.txt
@@ -329,24 +367,24 @@ void load_data() {
             if (payment_count >= MAX_PAYMENTS) break;
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Loaded %d payments from payments.txt\n", payment_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Loaded %d payments from payments.txt", payment_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(YELLOW);
-        printf("payments.txt not found - starting with empty payment database\n");
-        resetColor();
+        printCentered("payments.txt not found - starting with empty payment database", YELLOW);
     }
 
-    setColor(LIGHTCYAN);
-    printf("\nData loading complete. Press any key to continue...\n");
-    resetColor();
+    printf("\n");
+    printCentered("Data loading complete. Press any key to continue...", LIGHTCYAN);
     getch();
 }
 
 // File Handling Functions - Save Data to Text Files
 void save_data() {
     FILE *file;
+
+    printCentered("Saving system data...", LIGHTCYAN);
+    printf("\n");
 
     // Save users to users.txt
     file = fopen("users.txt", "w");
@@ -358,13 +396,11 @@ void save_data() {
                     users[i].is_active);
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Saved %d users to users.txt\n", user_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Saved %d users to users.txt", user_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(LIGHTRED);
-        printf("Error: Could not save users.txt\n");
-        resetColor();
+        printCentered("Error: Could not save users.txt", LIGHTRED);
     }
 
     // Save vehicles to vehicles.txt
@@ -377,13 +413,11 @@ void save_data() {
                     vehicles[i].color, vehicles[i].reg_date);
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Saved %d vehicles to vehicles.txt\n", vehicle_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Saved %d vehicles to vehicles.txt", vehicle_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(LIGHTRED);
-        printf("Error: Could not save vehicles.txt\n");
-        resetColor();
+        printCentered("Error: Could not save vehicles.txt", LIGHTRED);
     }
 
     // Save slots to slots.txt
@@ -395,13 +429,11 @@ void save_data() {
                     slots[i].vehicle_id, slots[i].reserved_time, slots[i].user_id);
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Saved %d slots to slots.txt\n", slot_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Saved %d slots to slots.txt", slot_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(LIGHTRED);
-        printf("Error: Could not save slots.txt\n");
-        resetColor();
+        printCentered("Error: Could not save slots.txt", LIGHTRED);
     }
 
     // Save reservations to reservations.txt
@@ -416,13 +448,11 @@ void save_data() {
                     reservations[i].total_amount);
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Saved %d reservations to reservations.txt\n", reservation_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Saved %d reservations to reservations.txt", reservation_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(LIGHTRED);
-        printf("Error: Could not save reservations.txt\n");
-        resetColor();
+        printCentered("Error: Could not save reservations.txt", LIGHTRED);
     }
 
     // Save payments to payments.txt
@@ -436,18 +466,15 @@ void save_data() {
                     payments[i].status);
         }
         fclose(file);
-        setColor(LIGHTGREEN);
-        printf("Saved %d payments to payments.txt\n", payment_count);
-        resetColor();
+        char msg[100];
+        sprintf(msg, "Saved %d payments to payments.txt", payment_count);
+        printCentered(msg, LIGHTGREEN);
     } else {
-        setColor(LIGHTRED);
-        printf("Error: Could not save payments.txt\n");
-        resetColor();
+        printCentered("Error: Could not save payments.txt", LIGHTRED);
     }
 
-    setColor(LIGHTCYAN);
-    printf("\nAll data saved successfully!\n");
-    resetColor();
+    printf("\n");
+    printCentered("All data saved successfully!", LIGHTCYAN);
 }
 
 // Utility Functions
@@ -456,36 +483,28 @@ void clear_screen() {
 }
 
 void print_header() {
-    setColor(LIGHTCYAN);
-    printf("\n");
-    printf("========================================================\n");
-    setColor(YELLOW);
-    printf("        WELCOME TO PARKING LOT MANAGEMENT SYSTEM       \n");
-    setColor(LIGHTCYAN);
-    printf("========================================================\n");
-    resetColor();
+    print_ascii_header();
+    printCentered("*** SMART PARKING MANAGEMENT SYSTEM ***", YELLOW);
+    printCenteredLine('=', LIGHTCYAN);
+    printCentered("WELCOME OUR SYSTEM", LIGHTGREEN);
+    printCenteredLine('=', LIGHTCYAN);
 }
 
 void pause_screen() {
-    setColor(LIGHTGRAY);
-    printf("\nPress any key to continue...");
-    resetColor();
+    printf("\n");
+    printCentered("Press any key to continue...", LIGHTGRAY);
     getch();
 }
 
 int validate_phone(char *phone) {
     if (strlen(phone) != 11) {
-        setColor(LIGHTRED);
-        printf("Phone number must be exactly 11 digits!\n");
-        resetColor();
+        printCentered("Phone number must be exactly 11 digits!", LIGHTRED);
         return 0;
     }
 
     for (int i = 0; i < 11; i++) {
         if (!isdigit(phone[i])) {
-            setColor(LIGHTRED);
-            printf("Phone number must contain only digits!\n");
-            resetColor();
+            printCentered("Phone number must contain only digits!", LIGHTRED);
             return 0;
         }
     }
@@ -497,9 +516,7 @@ int validate_email(char *email) {
     int len = strlen(email);
 
     if (len < 5) {
-        setColor(LIGHTRED);
-        printf("Email too short!\n");
-        resetColor();
+        printCentered("Email too short!", LIGHTRED);
         return 0;
     }
 
@@ -509,9 +526,7 @@ int validate_email(char *email) {
     }
 
     if (at_count != 1 || dot_count < 1) {
-        setColor(LIGHTRED);
-        printf("Invalid email format!\n");
-        resetColor();
+        printCentered("Invalid email format!", LIGHTRED);
         return 0;
     }
     return 1;
@@ -598,6 +613,13 @@ int get_next_payment_id() {
 
 
 
+
+
+
+
+
+
+
 // Menu Functions
 void main_menu() {
     int choice;
@@ -605,18 +627,22 @@ void main_menu() {
     while (1) {
         clear_screen();
         print_header();
+        printf("\n");
 
-        setColor(LIGHTGREEN);
-        printf("\n1. User Registration");
-        setColor(LIGHTBLUE);
-        printf("\n2. User Login");
-        setColor(LIGHTMAGENTA);
-        printf("\n3. Admin Login");
-        setColor(LIGHTRED);
-        printf("\n4. Exit");
+        printCentered("MAIN MENU", LIGHTCYAN);
+        printCentered("Please select an option:", LIGHTGREEN);
+        printf("\n");
 
+        printCentered("1. Register Customer", LIGHTGREEN);
+        printCentered("2. User Login", LIGHTBLUE);
+        printCentered("3. Admin Login", LIGHTMAGENTA);
+        printCentered("4. Exit System", LIGHTRED);
+
+        printf("\n");
+        setColor(YELLOW);
+        printf("%*s", (CONSOLE_WIDTH - 15) / 2, "");
+        printf("Enter choice: ");
         resetColor();
-        printf("\n\nEnter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
@@ -630,15 +656,14 @@ void main_menu() {
                 admin_login();
                 break;
             case 4:
-                setColor(LIGHTCYAN);
-                printf("\nThank you for using Parking Management System!");
-                resetColor();
+                printf("\n");
+                printCentered("Thank you for using SMART PARK System!", LIGHTCYAN);
+                printCentered("Have a great day!", YELLOW);
                 save_data();
                 exit(0);
             default:
-                setColor(LIGHTRED);
-                printf("\nInvalid choice! Please try again.");
-                resetColor();
+                printf("\n");
+                printCentered("Invalid choice! Please try again.", LIGHTRED);
                 pause_screen();
         }
     }
@@ -650,38 +675,30 @@ void user_menu() {
     while (1) {
         clear_screen();
         print_header();
+        printf("\n");
 
-        setColor(LIGHTCYAN);
-        printf("\n*** USER DASHBOARD ***");
-        resetColor();
+        printCentered("USER DASHBOARD", LIGHTCYAN);
+        printCentered("Welcome to your personal parking hub!", LIGHTGREEN);
+        printf("\n");
 
+        printCentered("1. Update Profile", YELLOW);
+        printCentered("2. Add Vehicle", LIGHTBLUE);
+        printCentered("3. View My Vehicles", LIGHTGREEN);
+        printCentered("4. View Available Slots", CYAN);
+        printCentered("5. Reserve Slot", MAGENTA);
+        printCentered("6. Cancel Reservation", LIGHTRED);
+        printCentered("7. Make Payment", YELLOW);
+        printCentered("8. View Payment History", LIGHTCYAN);
+        printCentered("9. View Booking History", WHITE);
+        printCentered("10. Check Overstay Alerts", LIGHTRED);
+        printCentered("11. Generate My Report", LIGHTGREEN);
+        printCentered("12. Logout", DARKGRAY);
+
+        printf("\n");
         setColor(YELLOW);
-        printf("\n1. Update Profile");
-        setColor(LIGHTBLUE);
-        printf("\n2. Add Vehicle");
-        setColor(LIGHTGREEN);
-        printf("\n3. View My Vehicles");
-        setColor(CYAN);
-        printf("\n4. View Available Slots");
-        setColor(MAGENTA);
-        printf("\n5. Reserve Slot");
-        setColor(LIGHTRED);
-        printf("\n6. Cancel Reservation");
-        setColor(YELLOW);
-        printf("\n7. Make Payment");
-        setColor(LIGHTCYAN);
-        printf("\n8. View Payment History");
-        setColor(WHITE);
-        printf("\n9. View Booking History");
-        setColor(LIGHTRED);
-        printf("\n10. Check Overstay Alerts");
-        setColor(LIGHTGREEN);
-        printf("\n11. Generate My Report");
-        setColor(DARKGRAY);
-        printf("\n12. Logout");
-
+        printf("%*s", (CONSOLE_WIDTH - 15) / 2, "");
+        printf("Enter choice: ");
         resetColor();
-        printf("\n\nEnter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
@@ -720,11 +737,12 @@ void user_menu() {
                 break;
             case 12:
                 current_user_id = -1;
+                printCentered("Logged out successfully!", LIGHTGREEN);
+                pause_screen();
                 return;
             default:
-                setColor(LIGHTRED);
-                printf("\nInvalid choice! Please try again.");
-                resetColor();
+                printf("\n");
+                printCentered("Invalid choice! Please try again.", LIGHTRED);
                 pause_screen();
         }
     }
@@ -736,32 +754,27 @@ void admin_menu() {
     while (1) {
         clear_screen();
         print_header();
+        printf("\n");
 
-        setColor(LIGHTRED);
-        printf("\n*** ADMIN DASHBOARD ***");
-        resetColor();
+        printCentered("ADMIN DASHBOARD", LIGHTRED);
+        printCentered("System Administration Portal", YELLOW);
+        printf("\n");
 
-        setColor(LIGHTBLUE);
-        printf("\n1. View All Users");
-        setColor(LIGHTGREEN);
-        printf("\n2. Search Users");
-        setColor(LIGHTRED);
-        printf("\n3. Delete User");
+        printCentered("1. View All Users", LIGHTBLUE);
+        printCentered("2. Search Users", LIGHTGREEN);
+        printCentered("3. Delete User", LIGHTRED);
+        printCentered("4. View User History", YELLOW);
+        printCentered("5. View All Vehicles", LIGHTCYAN);
+        printCentered("6. Slot Usage Report", MAGENTA);
+        printCentered("7. Generate Daily Report", WHITE);
+        printCentered("8. Check System Overstays", LIGHTMAGENTA);
+        printCentered("9. Logout", DARKGRAY);
+
+        printf("\n");
         setColor(YELLOW);
-        printf("\n4. View User History");
-        setColor(LIGHTCYAN);
-        printf("\n5. View All Vehicles");
-        setColor(MAGENTA);
-        printf("\n6. Slot Usage Report");
-        setColor(WHITE);
-        printf("\n7. Generate Daily Report");
-        setColor(LIGHTMAGENTA);
-        printf("\n8. Check System Overstays");
-        setColor(DARKGRAY);
-        printf("\n9. Logout");
-
+        printf("%*s", (CONSOLE_WIDTH - 15) / 2, "");
+        printf("Enter choice: ");
         resetColor();
-        printf("\n\nEnter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
@@ -791,11 +804,12 @@ void admin_menu() {
                 break;
             case 9:
                 is_admin = 0;
+                printCentered("Admin logged out successfully!", LIGHTGREEN);
+                pause_screen();
                 return;
             default:
-                setColor(LIGHTRED);
-                printf("\nInvalid choice! Please try again.");
-                resetColor();
+                printf("\n");
+                printCentered("Invalid choice! Please try again.", LIGHTRED);
                 pause_screen();
         }
     }
@@ -805,22 +819,25 @@ void admin_menu() {
 void user_register() {
     clear_screen();
     print_header();
-    setColor(LIGHTGREEN);
-    printf("\n*** USER REGISTRATION ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("CUSTOMER REGISTRATION", LIGHTGREEN);
+    printCentered("Create your SMART PARK account", LIGHTCYAN);
+    printf("\n");
 
     User new_user;
     new_user.user_id = get_next_user_id();
     new_user.is_active = 1;
 
     setColor(WHITE);
-    printf("\nEnter your name: ");
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
+    printf("Enter your full name: ");
     resetColor();
     scanf("%s", new_user.name);
 
     // Phone number validation
     do {
         setColor(WHITE);
+        printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
         printf("Enter phone number (11 digits): ");
         resetColor();
         scanf("%s", new_user.phone);
@@ -829,13 +846,15 @@ void user_register() {
     // Email validation
     do {
         setColor(WHITE);
+        printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
         printf("Enter email address: ");
         resetColor();
         scanf("%s", new_user.email);
     } while (!validate_email(new_user.email));
 
     setColor(WHITE);
-    printf("Enter password: ");
+    printf("%*s", (CONSOLE_WIDTH - 30) / 2, "");
+    printf("Create a secure password: ");
     resetColor();
     mask_password(new_user.password);
 
@@ -844,16 +863,16 @@ void user_register() {
     // Check if phone or email already exists
     for (int i = 0; i < user_count; i++) {
         if (strcmp(users[i].phone, new_user.phone) == 0) {
-            setColor(LIGHTRED);
-            printf("\nPhone number already registered!");
-            resetColor();
+            printf("\n");
+            printCentered("Phone number already registered!", LIGHTRED);
+            printCentered("Please use a different phone number.", YELLOW);
             pause_screen();
             return;
         }
         if (strcmp(users[i].email, new_user.email) == 0) {
-            setColor(LIGHTRED);
-            printf("\nEmail already registered!");
-            resetColor();
+            printf("\n");
+            printCentered("Email already registered!", LIGHTRED);
+            printCentered("Please use a different email address.", YELLOW);
             pause_screen();
             return;
         }
@@ -862,9 +881,16 @@ void user_register() {
     users[user_count] = new_user;
     user_count++;
 
-    setColor(LIGHTGREEN);
-    printf("\nRegistration successful! Your User ID is: %d", new_user.user_id);
-    resetColor();
+    printf("\n");
+    printCenteredLine('=', LIGHTGREEN);
+    printCentered("REGISTRATION SUCCESSFUL!", LIGHTGREEN);
+    printCenteredLine('=', LIGHTGREEN);
+    char success_msg[100];
+    sprintf(success_msg, "Your Customer ID: %d", new_user.user_id);
+    printCentered(success_msg, LIGHTCYAN);
+    sprintf(success_msg, "Welcome to SMART PARK, %s!", new_user.name);
+    printCentered(success_msg, YELLOW);
+    printCentered("You can now login and start parking!", LIGHTGREEN);
 
     // Save data immediately after registration
     save_data();
@@ -874,18 +900,21 @@ void user_register() {
 void user_login() {
     clear_screen();
     print_header();
-    setColor(LIGHTBLUE);
-    printf("\n*** USER LOGIN ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("CUSTOMER LOGIN", LIGHTBLUE);
+    printCentered("Access your SMART PARK account", LIGHTCYAN);
+    printf("\n");
 
     char phone[20], password[MAX_STRING];
 
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
     printf("Enter phone number: ");
     resetColor();
     scanf("%s", phone);
 
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 20) / 2, "");
     printf("Enter password: ");
     resetColor();
     mask_password(password);
@@ -895,51 +924,64 @@ void user_login() {
             strcmp(users[i].password, password) == 0 &&
             users[i].is_active == 1) {
             current_user_id = users[i].user_id;
-            setColor(LIGHTGREEN);
-            printf("\nLogin successful! Welcome, %s", users[i].name);
-            resetColor();
+            printf("\n");
+            printCenteredLine('=', LIGHTGREEN);
+            printCentered("LOGIN SUCCESSFUL!", LIGHTGREEN);
+            printCenteredLine('=', LIGHTGREEN);
+            char welcome_msg[100];
+            sprintf(welcome_msg, "Welcome back, %s!", users[i].name);
+            printCentered(welcome_msg, LIGHTCYAN);
+            printCentered("Redirecting to your dashboard...", YELLOW);
             pause_screen();
             user_menu();
             return;
         }
     }
 
-    setColor(LIGHTRED);
-    printf("\nInvalid credentials or account deactivated!");
-    resetColor();
+    printf("\n");
+    printCentered("LOGIN FAILED!", LIGHTRED);
+    printCentered("Invalid credentials or account deactivated!", YELLOW);
+    printCentered("Please check your phone number and password.", LIGHTCYAN);
     pause_screen();
 }
 
 void admin_login() {
     clear_screen();
     print_header();
-    setColor(LIGHTRED);
-    printf("\n*** ADMIN LOGIN ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("ADMINISTRATOR LOGIN", LIGHTRED);
+    printCentered("SMART PARK System Administration", YELLOW);
+    printf("\n");
 
     char username[MAX_STRING], password[MAX_STRING];
 
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
     printf("Enter admin username: ");
     resetColor();
     scanf("%s", username);
 
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
     printf("Enter admin password: ");
     resetColor();
     mask_password(password);
 
     if (strcmp(username, "sajib") == 0 && strcmp(password, "12345") == 0) {
         is_admin = 1;
-        setColor(LIGHTGREEN);
-        printf("\nAdmin login successful! Welcome, Administrator");
-        resetColor();
+        printf("\n");
+        printCenteredLine('=', LIGHTGREEN);
+        printCentered("ADMIN LOGIN SUCCESSFUL!", LIGHTGREEN);
+        printCenteredLine('=', LIGHTGREEN);
+        printCentered("Welcome, System Administrator!", LIGHTCYAN);
+        printCentered("Full system access granted.", YELLOW);
         pause_screen();
         admin_menu();
     } else {
-        setColor(LIGHTRED);
-        printf("\nInvalid admin credentials!");
-        resetColor();
+        printf("\n");
+        printCentered("ACCESS DENIED!", LIGHTRED);
+        printCentered("Invalid administrator credentials!", YELLOW);
+        printCentered("Contact system admin for assistance.", LIGHTCYAN);
         pause_screen();
     }
 }
@@ -948,9 +990,10 @@ void admin_login() {
 void update_profile() {
     clear_screen();
     print_header();
-    setColor(YELLOW);
-    printf("\n*** UPDATE PROFILE ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("UPDATE PROFILE", YELLOW);
+    printCentered("Modify your account information", LIGHTCYAN);
+    printf("\n");
 
     int user_index = -1;
     for (int i = 0; i < user_count; i++) {
@@ -961,81 +1004,94 @@ void update_profile() {
     }
 
     if (user_index == -1) {
-        setColor(LIGHTRED);
-        printf("User not found!");
-        resetColor();
+        printCentered("User account not found!", LIGHTRED);
         pause_screen();
         return;
     }
 
-    setColor(LIGHTCYAN);
-    printf("Current Profile Information:");
-    printf("\nName: %s", users[user_index].name);
-    printf("\nPhone: %s", users[user_index].phone);
-    printf("\nEmail: %s", users[user_index].email);
-    resetColor();
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("CURRENT PROFILE INFORMATION", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+    char info[200];
+    sprintf(info, "Name: %s", users[user_index].name);
+    printCentered(info, WHITE);
+    sprintf(info, "Phone: %s", users[user_index].phone);
+    printCentered(info, WHITE);
+    sprintf(info, "Email: %s", users[user_index].email);
+    printCentered(info, WHITE);
+    sprintf(info, "Member since: %s", users[user_index].reg_date);
+    printCentered(info, LIGHTGRAY);
+
+    printf("\n");
+    printCentered("What would you like to update?", WHITE);
+    printf("\n");
+    printCentered("1. Update Name", LIGHTGREEN);
+    printCentered("2. Update Phone", LIGHTGREEN);
+    printCentered("3. Update Email", LIGHTGREEN);
+    printCentered("4. Change Password", LIGHTGREEN);
+    printCentered("5. Go Back", LIGHTRED);
 
     int choice;
     setColor(WHITE);
-    printf("\n\nWhat do you want to update?");
-    setColor(LIGHTGREEN);
-    printf("\n1. Name");
-    printf("\n2. Phone");
-    printf("\n3. Email");
-    printf("\n4. Password");
-    setColor(LIGHTRED);
-    printf("\n5. Go Back");
+    printf("%*s", (CONSOLE_WIDTH - 15) / 2, "");
+    printf("Enter choice: ");
     resetColor();
-    printf("\nEnter choice: ");
     scanf("%d", &choice);
 
     switch (choice) {
         case 1:
+            printf("\n");
             setColor(WHITE);
+            printf("%*s", (CONSOLE_WIDTH - 20) / 2, "");
             printf("Enter new name: ");
             resetColor();
             scanf("%s", users[user_index].name);
-            setColor(LIGHTGREEN);
-            printf("Name updated successfully!");
-            resetColor();
+            printf("\n");
+            printCentered("Name updated successfully!", LIGHTGREEN);
             save_data();
             break;
         case 2:
+            printf("\n");
             do {
                 setColor(WHITE);
+                printf("%*s", (CONSOLE_WIDTH - 30) / 2, "");
                 printf("Enter new phone (11 digits): ");
                 resetColor();
                 scanf("%s", users[user_index].phone);
             } while (!validate_phone(users[user_index].phone));
-            setColor(LIGHTGREEN);
-            printf("Phone updated successfully!");
-            resetColor();
+            printf("\n");
+            printCentered("Phone number updated successfully!", LIGHTGREEN);
             save_data();
             break;
         case 3:
+            printf("\n");
             do {
                 setColor(WHITE);
+                printf("%*s", (CONSOLE_WIDTH - 20) / 2, "");
                 printf("Enter new email: ");
                 resetColor();
                 scanf("%s", users[user_index].email);
             } while (!validate_email(users[user_index].email));
-            setColor(LIGHTGREEN);
-            printf("Email updated successfully!");
-            resetColor();
+            printf("\n");
+            printCentered("Email address updated successfully!", LIGHTGREEN);
             save_data();
             break;
         case 4:
+            printf("\n");
             setColor(WHITE);
+            printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
             printf("Enter new password: ");
             resetColor();
             mask_password(users[user_index].password);
-            setColor(LIGHTGREEN);
-            printf("Password updated successfully!");
-            resetColor();
+            printf("\n");
+            printCentered("Password changed successfully!", LIGHTGREEN);
             save_data();
             break;
         case 5:
             return;
+        default:
+            printf("\n");
+            printCentered("Invalid selection!", LIGHTRED);
     }
 
     pause_screen();
@@ -1044,26 +1100,27 @@ void update_profile() {
 void add_vehicle() {
     clear_screen();
     print_header();
-    setColor(LIGHTBLUE);
-    printf("\n*** ADD VEHICLE ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("ADD VEHICLE", LIGHTBLUE);
+    printCentered("Register a new vehicle to your account", LIGHTCYAN);
+    printf("\n");
 
     Vehicle new_vehicle;
     new_vehicle.vehicle_id = get_next_vehicle_id();
     new_vehicle.user_id = current_user_id;
 
-    setColor(WHITE);
-    printf("Select vehicle type:");
-    setColor(LIGHTGREEN);
-    printf("\n1. Bike");
-    setColor(LIGHTBLUE);
-    printf("\n2. Car");
-    setColor(YELLOW);
-    printf("\n3. Truck");
-    resetColor();
-    printf("\nEnter choice: ");
+    printCentered("Select your vehicle type:", WHITE);
+    printf("\n");
+    printCentered("1. Bike/Motorcycle", LIGHTGREEN);
+    printCentered("2. Car/SUV", LIGHTBLUE);
+    printCentered("3. Truck/Van", YELLOW);
 
     int type_choice;
+    printf("\n");
+    setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 15) / 2, "");
+    printf("Enter choice: ");
+    resetColor();
     scanf("%d", &type_choice);
 
     switch (type_choice) {
@@ -1077,19 +1134,21 @@ void add_vehicle() {
             strcpy(new_vehicle.type, "truck");
             break;
         default:
-            setColor(LIGHTRED);
-            printf("Invalid vehicle type!");
-            resetColor();
+            printf("\n");
+            printCentered("Invalid vehicle type selection!", LIGHTRED);
             pause_screen();
             return;
     }
 
+    printf("\n");
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
     printf("Enter license plate: ");
     resetColor();
     scanf("%s", new_vehicle.license_plate);
 
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
     printf("Enter vehicle color: ");
     resetColor();
     scanf("%s", new_vehicle.color);
@@ -1099,10 +1158,20 @@ void add_vehicle() {
     vehicles[vehicle_count] = new_vehicle;
     vehicle_count++;
 
-    setColor(LIGHTGREEN);
-    printf("\nVehicle added successfully!");
-    printf("\nVehicle ID: %d", new_vehicle.vehicle_id);
-    resetColor();
+    printf("\n");
+    printCenteredLine('=', LIGHTGREEN);
+    printCentered("VEHICLE REGISTERED SUCCESSFULLY!", LIGHTGREEN);
+    printCenteredLine('=', LIGHTGREEN);
+    char vehicle_info[200];
+    sprintf(vehicle_info, "Vehicle ID: %d", new_vehicle.vehicle_id);
+    printCentered(vehicle_info, LIGHTCYAN);
+    sprintf(vehicle_info, "Type: %s", new_vehicle.type);
+    printCentered(vehicle_info, WHITE);
+    sprintf(vehicle_info, "License: %s", new_vehicle.license_plate);
+    printCentered(vehicle_info, WHITE);
+    sprintf(vehicle_info, "Color: %s", new_vehicle.color);
+    printCentered(vehicle_info, WHITE);
+    printCentered("Vehicle ready for parking reservations!", YELLOW);
 
     // Save data immediately after adding vehicle
     save_data();
@@ -1112,30 +1181,53 @@ void add_vehicle() {
 void view_vehicles() {
     clear_screen();
     print_header();
-    setColor(LIGHTGREEN);
-    printf("\n*** MY VEHICLES ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("MY REGISTERED VEHICLES", LIGHTGREEN);
+    printCentered("Your vehicle fleet overview", LIGHTCYAN);
+    printf("\n");
 
     int found = 0;
     setColor(LIGHTCYAN);
-    printf("\n%-10s %-10s %-15s %-15s %-20s", "ID", "Type", "License", "Color", "Reg Date");
-    printf("\n----------------------------------------------------------------");
+    printf("%*s%-10s %-10s %-15s %-15s %-20s\n",
+           (CONSOLE_WIDTH - 70) / 2, "", "ID", "Type", "License", "Color", "Registered");
+    printf("%*s", (CONSOLE_WIDTH - 70) / 2, "");
+    for (int i = 0; i < 70; i++) printf("=");
+    printf("\n");
     resetColor();
 
     for (int i = 0; i < vehicle_count; i++) {
         if (vehicles[i].user_id == current_user_id) {
-            printf("\n%-10d %-10s %-15s %-15s %-20s",
+            // Color code by vehicle type
+            if (strcmp(vehicles[i].type, "bike") == 0) {
+                setColor(LIGHTGREEN);
+            } else if (strcmp(vehicles[i].type, "car") == 0) {
+                setColor(LIGHTBLUE);
+            } else {
+                setColor(YELLOW);
+            }
+            printf("%*s%-10d %-10s %-15s %-15s %-20s\n",
+                   (CONSOLE_WIDTH - 70) / 2, "",
                    vehicles[i].vehicle_id, vehicles[i].type,
                    vehicles[i].license_plate, vehicles[i].color,
                    vehicles[i].reg_date);
             found = 1;
         }
     }
+    resetColor();
 
     if (!found) {
-        setColor(YELLOW);
-        printf("\nNo vehicles found!");
-        resetColor();
+        printf("\n");
+        printCentered("No vehicles registered yet!", YELLOW);
+        printCentered("Add your first vehicle to start parking!", LIGHTCYAN);
+    } else {
+        printf("\n");
+        char total_msg[50];
+        int vehicle_count_user = 0;
+        for (int i = 0; i < vehicle_count; i++) {
+            if (vehicles[i].user_id == current_user_id) vehicle_count_user++;
+        }
+        sprintf(total_msg, "Total Vehicles: %d", vehicle_count_user);
+        printCentered(total_msg, LIGHTCYAN);
     }
 
     pause_screen();
@@ -1144,19 +1236,14 @@ void view_vehicles() {
 void view_available_slots() {
     clear_screen();
     print_header();
-    setColor(LIGHTCYAN);
-    printf("\n*** AVAILABLE PARKING SLOTS ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("AVAILABLE PARKING SLOTS", LIGHTCYAN);
+    printCentered("Real-time slot availability", LIGHTGREEN);
+    printf("\n");
 
-    setColor(WHITE);
-    printf("\nSlot Color Code:");
-    setColor(LIGHTGREEN);
-    printf("\n[A] = Available");
-    setColor(LIGHTRED);
-    printf("\n[O] = Occupied");
-    setColor(LIGHTBLUE);
-    printf("\n[R] = Reserved");
-    resetColor();
+    printCentered("SLOT STATUS LEGEND:", WHITE);
+    printCentered("A = Available  O = Occupied  R = Reserved", LIGHTGRAY);
+    printf("\n");
 
     print_colored_slots();
 
@@ -1171,82 +1258,105 @@ void view_available_slots() {
         }
     }
 
-    setColor(YELLOW);
-    printf("\n\nAvailability Summary:");
-    setColor(LIGHTGREEN);
-    printf("\nBike Slots Available: %d/%d", bike_available, BIKE_SLOTS);
-    printf("\nCar Slots Available: %d/%d", car_available, CAR_SLOTS);
-    printf("\nTruck Slots Available: %d/%d", truck_available, TRUCK_SLOTS);
+    printf("\n");
+    printCenteredLine('-', YELLOW);
+    printCentered("AVAILABILITY SUMMARY", YELLOW);
+    printCenteredLine('-', YELLOW);
+    char summary[100];
+    sprintf(summary, "Bike Slots: %d/%d Available", bike_available, BIKE_SLOTS);
+    printCentered(summary, LIGHTGREEN);
+    sprintf(summary, "Car Slots: %d/%d Available", car_available, CAR_SLOTS);
+    printCentered(summary, LIGHTGREEN);
+    sprintf(summary, "Truck Slots: %d/%d Available", truck_available, TRUCK_SLOTS);
+    printCentered(summary, LIGHTGREEN);
 
-    setColor(LIGHTCYAN);
-    printf("\n\nPricing (per hour):");
-    setColor(WHITE);
-    printf("\nBike: $%.2f", BIKE_PRICE);
-    printf("\nCar: $%.2f", CAR_PRICE);
-    printf("\nTruck: $%.2f", TRUCK_PRICE);
-    resetColor();
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("HOURLY RATES", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+    sprintf(summary, "Bike: $%.2f/hour", BIKE_PRICE);
+    printCentered(summary, WHITE);
+    sprintf(summary, "Car: $%.2f/hour", CAR_PRICE);
+    printCentered(summary, WHITE);
+    sprintf(summary, "Truck: $%.2f/hour", TRUCK_PRICE);
+    printCentered(summary, WHITE);
 
     pause_screen();
 }
 
 void print_colored_slots() {
-    setColor(YELLOW);
-    printf("\n\nBIKE SLOTS (1-40):");
-    resetColor();
     printf("\n");
+    printCentered("BIKE/MOTORCYCLE SLOTS (1-40)", YELLOW);
+    printf("\n");
+
     for (int i = 0; i < BIKE_SLOTS; i++) {
+        if (i % 10 == 0) {
+            printf("%*s", (CONSOLE_WIDTH - 40) / 2, "");
+        }
+
         if (strcmp(slots[i].status, "available") == 0) {
             setColor(LIGHTGREEN);
-            printf("[A]%02d ", slots[i].slot_id);
+            printf("A%02d ", slots[i].slot_id);
         } else if (strcmp(slots[i].status, "occupied") == 0) {
             setColor(LIGHTRED);
-            printf("[O]%02d ", slots[i].slot_id);
+            printf("O%02d ", slots[i].slot_id);
         } else {
             setColor(LIGHTBLUE);
-            printf("[R]%02d ", slots[i].slot_id);
+            printf("R%02d ", slots[i].slot_id);
         }
+
         if ((i + 1) % 10 == 0) {
             resetColor();
             printf("\n");
         }
     }
 
-    setColor(YELLOW);
-    printf("\n\nCAR SLOTS (41-80):");
-    resetColor();
     printf("\n");
+    printCentered("CAR/SUV SLOTS (41-80)", YELLOW);
+    printf("\n");
+
     for (int i = BIKE_SLOTS; i < BIKE_SLOTS + CAR_SLOTS; i++) {
+        if ((i - BIKE_SLOTS) % 10 == 0) {
+            printf("%*s", (CONSOLE_WIDTH - 40) / 2, "");
+        }
+
         if (strcmp(slots[i].status, "available") == 0) {
             setColor(LIGHTGREEN);
-            printf("[A]%02d ", slots[i].slot_id);
+            printf("A%02d ", slots[i].slot_id);
         } else if (strcmp(slots[i].status, "occupied") == 0) {
             setColor(LIGHTRED);
-            printf("[O]%02d ", slots[i].slot_id);
+            printf("O%02d ", slots[i].slot_id);
         } else {
             setColor(LIGHTBLUE);
-            printf("[R]%02d ", slots[i].slot_id);
+            printf("R%02d ", slots[i].slot_id);
         }
+
         if ((i - BIKE_SLOTS + 1) % 10 == 0) {
             resetColor();
             printf("\n");
         }
     }
 
-    setColor(YELLOW);
-    printf("\n\nTRUCK SLOTS (81-100):");
-    resetColor();
     printf("\n");
+    printCentered("TRUCK/VAN SLOTS (81-100)", YELLOW);
+    printf("\n");
+
     for (int i = BIKE_SLOTS + CAR_SLOTS; i < slot_count; i++) {
+        if ((i - BIKE_SLOTS - CAR_SLOTS) % 10 == 0) {
+            printf("%*s", (CONSOLE_WIDTH - 40) / 2, "");
+        }
+
         if (strcmp(slots[i].status, "available") == 0) {
             setColor(LIGHTGREEN);
-            printf("[A]%02d ", slots[i].slot_id);
+            printf("A%02d ", slots[i].slot_id);
         } else if (strcmp(slots[i].status, "occupied") == 0) {
             setColor(LIGHTRED);
-            printf("[O]%02d ", slots[i].slot_id);
+            printf("O%02d ", slots[i].slot_id);
         } else {
             setColor(LIGHTBLUE);
-            printf("[R]%02d ", slots[i].slot_id);
+            printf("R%02d ", slots[i].slot_id);
         }
+
         if ((i - BIKE_SLOTS - CAR_SLOTS + 1) % 10 == 0) {
             resetColor();
             printf("\n");
@@ -1263,50 +1373,55 @@ void print_colored_slots() {
 
 
 
+
 // Reservation Functions
 void reserve_slot() {
     clear_screen();
     print_header();
-    setColor(MAGENTA);
-    printf("\n*** RESERVE PARKING SLOT ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("RESERVE PARKING SLOT", MAGENTA);
+    printCentered("Secure your parking space instantly", LIGHTCYAN);
+    printf("\n");
 
     // Show user's vehicles
-    setColor(WHITE);
-    printf("Your vehicles:");
-    resetColor();
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("YOUR REGISTERED VEHICLES", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+
     int user_vehicles[100], vehicle_found = 0;
 
     for (int i = 0; i < vehicle_count; i++) {
         if (vehicles[i].user_id == current_user_id) {
-            setColor(LIGHTCYAN);
-            printf("\n%d. Vehicle ID: %d (%s) - %s",
-                   vehicle_found + 1, vehicles[i].vehicle_id,
-                   vehicles[i].type, vehicles[i].license_plate);
+            char vehicle_info[200];
+            sprintf(vehicle_info, "%d. %s (%s) - Vehicle ID: %d - %s",
+                   vehicle_found + 1, vehicles[i].license_plate, vehicles[i].color,
+                   vehicles[i].vehicle_id, vehicles[i].type);
+            printCentered(vehicle_info, LIGHTCYAN);
             user_vehicles[vehicle_found] = i;
             vehicle_found++;
         }
     }
-    resetColor();
 
     if (vehicle_found == 0) {
-        setColor(YELLOW);
-        printf("\nNo vehicles found! Please add a vehicle first.");
-        resetColor();
+        printf("\n");
+        printCentered("NO VEHICLES REGISTERED!", YELLOW);
+        printCentered("Please add a vehicle first to make reservations.", LIGHTCYAN);
         pause_screen();
         return;
     }
 
     int vehicle_choice;
+    char prompt[100];
+    sprintf(prompt, "Select vehicle (1-%d): ", vehicle_found);
+    printf("\n");
     setColor(WHITE);
-    printf("\n\nSelect vehicle (1-%d): ", vehicle_found);
+    printf("%*s%s", (CONSOLE_WIDTH - strlen(prompt)) / 2, "", prompt);
     resetColor();
     scanf("%d", &vehicle_choice);
 
     if (vehicle_choice < 1 || vehicle_choice > vehicle_found) {
-        setColor(LIGHTRED);
-        printf("Invalid vehicle selection!");
-        resetColor();
+        printf("\n");
+        printCentered("Invalid vehicle selection!", LIGHTRED);
         pause_screen();
         return;
     }
@@ -1315,33 +1430,53 @@ void reserve_slot() {
     char *vehicle_type = vehicles[selected_vehicle_index].type;
 
     // Show available slots for this vehicle type
-    setColor(LIGHTGREEN);
-    printf("\nAvailable %s slots:", vehicle_type);
-    resetColor();
+    printf("\n");
+    printCenteredLine('-', LIGHTGREEN);
+    char available_msg[100];
+    sprintf(available_msg, "AVAILABLE %s SLOTS",
+            strcmp(vehicle_type, "bike") == 0 ? "BIKE/MOTORCYCLE" :
+            strcmp(vehicle_type, "car") == 0 ? "CAR/SUV" : "TRUCK/VAN");
+    printCentered(available_msg, LIGHTGREEN);
+    printCenteredLine('-', LIGHTGREEN);
+
     int available_slots[100], available_count = 0;
+    printf("\n");
 
     for (int i = 0; i < slot_count; i++) {
         if (strcmp(slots[i].type, vehicle_type) == 0 &&
             strcmp(slots[i].status, "available") == 0) {
-            setColor(LIGHTCYAN);
-            printf("\nSlot ID: %d", slots[i].slot_id);
+            if (available_count % 10 == 0) {
+                printf("%*s", (CONSOLE_WIDTH - 40) / 2, "");
+            }
+            setColor(LIGHTGREEN);
+            printf("%02d ", slots[i].slot_id);
+            resetColor();
+            if ((available_count + 1) % 10 == 0) {
+                printf("\n");
+            }
             available_slots[available_count] = i;
             available_count++;
         }
     }
-    resetColor();
+    if (available_count % 10 != 0) printf("\n");
 
     if (available_count == 0) {
-        setColor(LIGHTRED);
-        printf("\nNo available slots for %s!", vehicle_type);
-        resetColor();
+        printf("\n");
+        char no_slots_msg[100];
+        sprintf(no_slots_msg, "NO AVAILABLE %s SLOTS!",
+                strcmp(vehicle_type, "bike") == 0 ? "BIKE" :
+                strcmp(vehicle_type, "car") == 0 ? "CAR" : "TRUCK");
+        printCentered(no_slots_msg, LIGHTRED);
+        printCentered("Please try again later or choose a different vehicle.", YELLOW);
         pause_screen();
         return;
     }
 
     int slot_id;
+    printf("\n");
     setColor(WHITE);
-    printf("\n\nEnter slot ID to reserve: ");
+    printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
+    printf("Enter slot number to reserve: ");
     resetColor();
     scanf("%d", &slot_id);
 
@@ -1355,18 +1490,26 @@ void reserve_slot() {
     }
 
     if (slot_index == -1) {
-        setColor(LIGHTRED);
-        printf("Invalid slot ID or slot not available!");
-        resetColor();
+        printf("\n");
+        printCentered("Invalid slot number or slot not available!", LIGHTRED);
+        printCentered("Please select from the available slots shown above.", YELLOW);
         pause_screen();
         return;
     }
 
     double duration;
     setColor(WHITE);
-    printf("Enter duration in hours: ");
+    printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
+    printf("Enter parking duration (hours): ");
     resetColor();
     scanf("%lf", &duration);
+
+    if (duration <= 0 || duration > 24) {
+        printf("\n");
+        printCentered("Invalid duration! Please enter 1-24 hours.", LIGHTRED);
+        pause_screen();
+        return;
+    }
 
     // Create reservation
     Reservation new_reservation;
@@ -1398,15 +1541,31 @@ void reserve_slot() {
     reservations[reservation_count] = new_reservation;
     reservation_count++;
 
-    setColor(LIGHTGREEN);
-    printf("\nReservation successful!");
-    printf("\nReservation ID: %d", new_reservation.reservation_id);
-    printf("\nSlot: %d", slot_id);
-    printf("\nDuration: %.2f hours", duration);
-    printf("\nTotal Amount: $%.2f", new_reservation.total_amount);
-    setColor(YELLOW);
-    printf("\nPlease proceed to payment.");
-    resetColor();
+    printf("\n");
+    printCenteredLine('=', LIGHTGREEN);
+    printCentered("RESERVATION CONFIRMED!", LIGHTGREEN);
+    printCenteredLine('=', LIGHTGREEN);
+
+    char res_details[200];
+    sprintf(res_details, "Reservation ID: %d", new_reservation.reservation_id);
+    printCentered(res_details, LIGHTCYAN);
+    sprintf(res_details, "Slot Number: %d (%s)", slot_id, vehicle_type);
+    printCentered(res_details, WHITE);
+    sprintf(res_details, "Vehicle: %s (%s)",
+            vehicles[selected_vehicle_index].license_plate,
+            vehicles[selected_vehicle_index].color);
+    printCentered(res_details, WHITE);
+    sprintf(res_details, "Duration: %.1f hours", duration);
+    printCentered(res_details, WHITE);
+    sprintf(res_details, "Rate: $%.2f/hour", rate);
+    printCentered(res_details, WHITE);
+    sprintf(res_details, "Total Amount: $%.2f", new_reservation.total_amount);
+    printCentered(res_details, YELLOW);
+    sprintf(res_details, "Reserved Time: %s", new_reservation.start_time);
+    printCentered(res_details, LIGHTGRAY);
+
+    printf("\n");
+    printCentered("NEXT STEP: Please proceed to payment to secure your slot!", LIGHTCYAN);
 
     // Save data immediately after reservation
     save_data();
@@ -1416,74 +1575,108 @@ void reserve_slot() {
 void cancel_reservation() {
     clear_screen();
     print_header();
-    setColor(LIGHTRED);
-    printf("\n*** CANCEL RESERVATION ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("CANCEL RESERVATION", LIGHTRED);
+    printCentered("Cancel your active parking reservations", LIGHTCYAN);
+    printf("\n");
 
     // Show user's active reservations
-    setColor(WHITE);
-    printf("Your active reservations:");
-    resetColor();
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("YOUR ACTIVE RESERVATIONS", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+
     int user_reservations[100], reservation_found = 0;
 
     for (int i = 0; i < reservation_count; i++) {
         if (reservations[i].user_id == current_user_id &&
             strcmp(reservations[i].status, "active") == 0) {
-            setColor(LIGHTCYAN);
-            printf("\n%d. Reservation ID: %d, Slot: %d, Amount: $%.2f",
+            char res_info[200];
+            sprintf(res_info, "%d. Reservation ID: %d - Slot %d - $%.2f (%.1fh) - %s",
                    reservation_found + 1, reservations[i].reservation_id,
-                   reservations[i].slot_id, reservations[i].total_amount);
+                   reservations[i].slot_id, reservations[i].total_amount,
+                   reservations[i].duration_hours, reservations[i].start_time);
+            printCentered(res_info, LIGHTCYAN);
             user_reservations[reservation_found] = i;
             reservation_found++;
         }
     }
-    resetColor();
 
     if (reservation_found == 0) {
-        setColor(YELLOW);
-        printf("\nNo active reservations found!");
-        resetColor();
+        printf("\n");
+        printCentered("NO ACTIVE RESERVATIONS FOUND!", YELLOW);
+        printCentered("You don't have any reservations to cancel.", LIGHTCYAN);
         pause_screen();
         return;
     }
 
     int choice;
+    char cancel_prompt[100];
+    sprintf(cancel_prompt, "Select reservation to cancel (1-%d): ", reservation_found);
+    printf("\n");
     setColor(WHITE);
-    printf("\n\nSelect reservation to cancel (1-%d): ", reservation_found);
+    printf("%*s%s", (CONSOLE_WIDTH - strlen(cancel_prompt)) / 2, "", cancel_prompt);
     resetColor();
     scanf("%d", &choice);
 
     if (choice < 1 || choice > reservation_found) {
-        setColor(LIGHTRED);
-        printf("Invalid selection!");
-        resetColor();
+        printf("\n");
+        printCentered("Invalid selection!", LIGHTRED);
         pause_screen();
         return;
     }
 
     int reservation_index = user_reservations[choice - 1];
 
-    // Update reservation status
-    strcpy(reservations[reservation_index].status, "cancelled");
-    get_current_time(reservations[reservation_index].end_time);
+    // Confirmation
+    printf("\n");
+    printCenteredLine('-', YELLOW);
+    printCentered("CANCELLATION CONFIRMATION", YELLOW);
+    printCenteredLine('-', YELLOW);
+    char confirm_info[200];
+    sprintf(confirm_info, "Reservation ID: %d", reservations[reservation_index].reservation_id);
+    printCentered(confirm_info, WHITE);
+    sprintf(confirm_info, "Slot: %d | Amount: $%.2f",
+            reservations[reservation_index].slot_id,
+            reservations[reservation_index].total_amount);
+    printCentered(confirm_info, WHITE);
 
-    // Free up the slot
-    for (int i = 0; i < slot_count; i++) {
-        if (slots[i].slot_id == reservations[reservation_index].slot_id) {
-            strcpy(slots[i].status, "available");
-            slots[i].vehicle_id = 0;
-            slots[i].user_id = 0;
-            strcpy(slots[i].reserved_time, "");
-            break;
+    char confirm;
+    printf("\n");
+    setColor(YELLOW);
+    printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
+    printf("Confirm cancellation? (y/n): ");
+    resetColor();
+    scanf(" %c", &confirm);
+
+    if (confirm == 'y' || confirm == 'Y') {
+        // Update reservation status
+        strcpy(reservations[reservation_index].status, "cancelled");
+        get_current_time(reservations[reservation_index].end_time);
+
+        // Free up the slot
+        for (int i = 0; i < slot_count; i++) {
+            if (slots[i].slot_id == reservations[reservation_index].slot_id) {
+                strcpy(slots[i].status, "available");
+                slots[i].vehicle_id = 0;
+                slots[i].user_id = 0;
+                strcpy(slots[i].reserved_time, "");
+                break;
+            }
         }
+
+        printf("\n");
+        printCenteredLine('=', LIGHTGREEN);
+        printCentered("RESERVATION CANCELLED SUCCESSFULLY!", LIGHTGREEN);
+        printCenteredLine('=', LIGHTGREEN);
+        printCentered("Your slot has been released and is now available for others.", LIGHTCYAN);
+
+        // Save data immediately after cancellation
+        save_data();
+    } else {
+        printf("\n");
+        printCentered("Cancellation aborted. Your reservation remains active.", LIGHTCYAN);
     }
 
-    setColor(LIGHTGREEN);
-    printf("\nReservation cancelled successfully!");
-    resetColor();
-
-    // Save data immediately after cancellation
-    save_data();
     pause_screen();
 }
 
@@ -1491,14 +1684,16 @@ void cancel_reservation() {
 void make_payment() {
     clear_screen();
     print_header();
-    setColor(YELLOW);
-    printf("\n*** MAKE PAYMENT ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("MAKE PAYMENT", YELLOW);
+    printCentered("Complete your parking payment", LIGHTCYAN);
+    printf("\n");
 
     // Show unpaid reservations
-    setColor(WHITE);
-    printf("Unpaid reservations:");
-    resetColor();
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("PENDING PAYMENTS", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+
     int unpaid_reservations[100], unpaid_count = 0;
 
     for (int i = 0; i < reservation_count; i++) {
@@ -1515,77 +1710,113 @@ void make_payment() {
             }
 
             if (!payment_made) {
-                setColor(LIGHTCYAN);
-                printf("\n%d. Reservation ID: %d, Amount: $%.2f",
+                char unpaid_info[200];
+                sprintf(unpaid_info, "%d. Reservation ID: %d - Slot %d - $%.2f (%.1fh)",
                        unpaid_count + 1, reservations[i].reservation_id,
-                       reservations[i].total_amount);
+                       reservations[i].slot_id, reservations[i].total_amount,
+                       reservations[i].duration_hours);
+                printCentered(unpaid_info, LIGHTCYAN);
                 unpaid_reservations[unpaid_count] = i;
                 unpaid_count++;
             }
         }
     }
-    resetColor();
 
     if (unpaid_count == 0) {
-        setColor(YELLOW);
-        printf("\nNo unpaid reservations found!");
-        resetColor();
+        printf("\n");
+        printCentered("NO PENDING PAYMENTS!", LIGHTGREEN);
+        printCentered("All your reservations are fully paid.", LIGHTCYAN);
         pause_screen();
         return;
     }
 
     int choice;
+    char payment_prompt[100];
+    sprintf(payment_prompt, "Select reservation to pay (1-%d): ", unpaid_count);
+    printf("\n");
     setColor(WHITE);
-    printf("\n\nSelect reservation to pay (1-%d): ", unpaid_count);
+    printf("%*s%s", (CONSOLE_WIDTH - strlen(payment_prompt)) / 2, "", payment_prompt);
     resetColor();
     scanf("%d", &choice);
 
     if (choice < 1 || choice > unpaid_count) {
-        setColor(LIGHTRED);
-        printf("Invalid selection!");
-        resetColor();
+        printf("\n");
+        printCentered("Invalid selection!", LIGHTRED);
         pause_screen();
         return;
     }
 
     int reservation_index = unpaid_reservations[choice - 1];
 
-    setColor(WHITE);
-    printf("\nPayment Methods:");
-    setColor(LIGHTGREEN);
-    printf("\n1. Cash");
-    setColor(LIGHTBLUE);
-    printf("\n2. Card");
-    setColor(MAGENTA);
-    printf("\n3. bKash");
-    setColor(CYAN);
-    printf("\n4. Nagad");
-    resetColor();
-    printf("\nSelect payment method: ");
+    printf("\n");
+    printCenteredLine('-', YELLOW);
+    printCentered("PAYMENT METHODS", YELLOW);
+    printCenteredLine('-', YELLOW);
+    printCentered("1. Cash Payment", LIGHTGREEN);
+    printCentered("2. Credit/Debit Card", LIGHTBLUE);
+    printCentered("3. bKash Mobile Payment", MAGENTA);
+    printCentered("4. Nagad Mobile Payment", CYAN);
 
     int method_choice;
+    printf("\n");
+    setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 25) / 2, "");
+    printf("Select payment method: ");
+    resetColor();
     scanf("%d", &method_choice);
 
     char payment_method[20];
+    char method_display[30];
     switch (method_choice) {
         case 1:
             strcpy(payment_method, "cash");
+            strcpy(method_display, "Cash Payment");
             break;
         case 2:
             strcpy(payment_method, "card");
+            strcpy(method_display, "Credit/Debit Card");
             break;
         case 3:
             strcpy(payment_method, "bkash");
+            strcpy(method_display, "bKash Mobile Payment");
             break;
         case 4:
             strcpy(payment_method, "nagad");
+            strcpy(method_display, "Nagad Mobile Payment");
             break;
         default:
-            setColor(LIGHTRED);
-            printf("Invalid payment method!");
-            resetColor();
+            printf("\n");
+            printCentered("Invalid payment method!", LIGHTRED);
             pause_screen();
             return;
+    }
+
+    // Payment confirmation
+    printf("\n");
+    printCenteredLine('-', YELLOW);
+    printCentered("PAYMENT CONFIRMATION", YELLOW);
+    printCenteredLine('-', YELLOW);
+    char payment_info[200];
+    sprintf(payment_info, "Reservation: %d", reservations[reservation_index].reservation_id);
+    printCentered(payment_info, WHITE);
+    sprintf(payment_info, "Amount: $%.2f", reservations[reservation_index].total_amount);
+    printCentered(payment_info, WHITE);
+    sprintf(payment_info, "Method: %s", method_display);
+    printCentered(payment_info, WHITE);
+
+    char confirm;
+    printf("\n");
+    setColor(YELLOW);
+    printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
+    printf("Confirm payment? (y/n): ");
+    resetColor();
+    scanf(" %c", &confirm);
+
+    if (confirm != 'y' && confirm != 'Y') {
+        printf("\n");
+        printCentered("Payment cancelled.", LIGHTCYAN);
+        pause_screen();
+        return;
     }
 
     // Create payment record
@@ -1609,12 +1840,24 @@ void make_payment() {
         }
     }
 
-    setColor(LIGHTGREEN);
-    printf("\nPayment successful!");
-    printf("\nPayment ID: %d", new_payment.payment_id);
-    printf("\nAmount Paid: $%.2f", new_payment.amount);
-    printf("\nPayment Method: %s", new_payment.method);
-    resetColor();
+    printf("\n");
+    printCenteredLine('=', LIGHTGREEN);
+    printCentered("PAYMENT SUCCESSFUL!", LIGHTGREEN);
+    printCenteredLine('=', LIGHTGREEN);
+
+    char success_details[200];
+    sprintf(success_details, "Payment ID: %d", new_payment.payment_id);
+    printCentered(success_details, LIGHTCYAN);
+    sprintf(success_details, "Amount Paid: $%.2f", new_payment.amount);
+    printCentered(success_details, WHITE);
+    sprintf(success_details, "Payment Method: %s", method_display);
+    printCentered(success_details, WHITE);
+    sprintf(success_details, "Transaction Date: %s", new_payment.payment_date);
+    printCentered(success_details, LIGHTGRAY);
+
+    printf("\n");
+    printCentered("Your parking slot is now ACTIVE and ready to use!", LIGHTCYAN);
+    printCentered("Thank you for choosing SMART PARK!", YELLOW);
 
     // Save data immediately after payment
     save_data();
@@ -1625,25 +1868,33 @@ void make_payment() {
 void view_payment_history() {
     clear_screen();
     print_header();
-    setColor(LIGHTCYAN);
-    printf("\n*** PAYMENT HISTORY ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("PAYMENT HISTORY", LIGHTCYAN);
+    printCentered("Your complete transaction history", LIGHTGREEN);
+    printf("\n");
 
     int found = 0;
+    double total_paid = 0;
+
     setColor(LIGHTCYAN);
-    printf("\n%-10s %-15s %-10s %-15s %-20s %-15s",
+    printf("%*s%-8s %-12s %-10s %-15s %-20s %-12s\n",
+           (CONSOLE_WIDTH - 77) / 2, "",
            "Pay ID", "Reservation", "Amount", "Method", "Date", "Status");
-    printf("\n-------------------------------------------------------------------------");
+    printf("%*s", (CONSOLE_WIDTH - 77) / 2, "");
+    for (int i = 0; i < 77; i++) printf("=");
+    printf("\n");
     resetColor();
 
     for (int i = 0; i < payment_count; i++) {
         if (payments[i].user_id == current_user_id) {
             if (strcmp(payments[i].status, "completed") == 0) {
                 setColor(LIGHTGREEN);
+                total_paid += payments[i].amount;
             } else {
                 setColor(YELLOW);
             }
-            printf("\n%-10d %-15d $%-9.2f %-15s %-20s %-15s",
+            printf("%*s%-8d %-12d $%-9.2f %-15s %-20s %-12s\n",
+                   (CONSOLE_WIDTH - 77) / 2, "",
                    payments[i].payment_id, payments[i].reservation_id,
                    payments[i].amount, payments[i].method,
                    payments[i].payment_date, payments[i].status);
@@ -1653,9 +1904,25 @@ void view_payment_history() {
     resetColor();
 
     if (!found) {
-        setColor(YELLOW);
-        printf("\nNo payment history found!");
-        resetColor();
+        printf("\n");
+        printCentered("NO PAYMENT HISTORY FOUND!", YELLOW);
+        printCentered("Make your first reservation to start using SMART PARK!", LIGHTCYAN);
+    } else {
+        printf("\n");
+        printCenteredLine('-', LIGHTCYAN);
+        char total_info[100];
+        sprintf(total_info, "Total Amount Paid: $%.2f", total_paid);
+        printCentered(total_info, LIGHTGREEN);
+        int payment_count_user = 0;
+        for (int i = 0; i < payment_count; i++) {
+            if (payments[i].user_id == current_user_id) payment_count_user++;
+        }
+        sprintf(total_info, "Total Transactions: %d", payment_count_user);
+        printCentered(total_info, WHITE);
+        sprintf(total_info, "Average per Transaction: $%.2f",
+                payment_count_user > 0 ? total_paid / payment_count_user : 0);
+        printCentered(total_info, LIGHTCYAN);
+        printCenteredLine('-', LIGHTCYAN);
     }
 
     pause_screen();
@@ -1664,30 +1931,48 @@ void view_payment_history() {
 void view_booking_history() {
     clear_screen();
     print_header();
-    setColor(WHITE);
-    printf("\n*** BOOKING HISTORY ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("BOOKING HISTORY", WHITE);
+    printCentered("Complete record of all your reservations", LIGHTGREEN);
+    printf("\n");
 
     int found = 0;
+    int active_count = 0, completed_count = 0, cancelled_count = 0;
+
     setColor(LIGHTCYAN);
-    printf("\n%-10s %-8s %-10s %-20s %-20s %-12s %-10s",
+    printf("%*s%-8s %-6s %-8s %-18s %-18s %-10s %-8s\n",
+           (CONSOLE_WIDTH - 80) / 2, "",
            "Res ID", "Slot", "Vehicle", "Start Time", "End Time", "Status", "Amount");
-    printf("\n--------------------------------------------------------------------------------");
+    printf("%*s", (CONSOLE_WIDTH - 80) / 2, "");
+    for (int i = 0; i < 80; i++) printf("=");
+    printf("\n");
     resetColor();
 
     for (int i = 0; i < reservation_count; i++) {
         if (reservations[i].user_id == current_user_id) {
             if (strcmp(reservations[i].status, "active") == 0) {
                 setColor(LIGHTGREEN);
+                active_count++;
             } else if (strcmp(reservations[i].status, "completed") == 0) {
                 setColor(LIGHTBLUE);
+                completed_count++;
             } else {
                 setColor(LIGHTRED);
+                cancelled_count++;
             }
-            printf("\n%-10d %-8d %-10d %-20s %-20s %-12s $%-9.2f",
+
+            char end_time_display[20];
+            if (strlen(reservations[i].end_time) == 0) {
+                strcpy(end_time_display, "Ongoing");
+            } else {
+                strcpy(end_time_display, reservations[i].end_time);
+            }
+
+            printf("%*s%-8d %-6d %-8d %-18s %-18s %-10s $%-7.2f\n",
+                   (CONSOLE_WIDTH - 80) / 2, "",
                    reservations[i].reservation_id, reservations[i].slot_id,
                    reservations[i].vehicle_id, reservations[i].start_time,
-                   reservations[i].end_time, reservations[i].status,
+                   end_time_display, reservations[i].status,
                    reservations[i].total_amount);
             found = 1;
         }
@@ -1695,9 +1980,21 @@ void view_booking_history() {
     resetColor();
 
     if (!found) {
-        setColor(YELLOW);
-        printf("\nNo booking history found!");
-        resetColor();
+        printf("\n");
+        printCentered("NO BOOKING HISTORY FOUND!", YELLOW);
+        printCentered("Start your parking journey by making your first reservation!", LIGHTCYAN);
+    } else {
+        printf("\n");
+        printCenteredLine('-', LIGHTCYAN);
+        printCentered("BOOKING SUMMARY", LIGHTCYAN);
+        printCenteredLine('-', LIGHTCYAN);
+        char summary[200];
+        sprintf(summary, "Total Bookings: %d", active_count + completed_count + cancelled_count);
+        printCentered(summary, WHITE);
+        sprintf(summary, "Active: %d | Completed: %d | Cancelled: %d",
+                active_count, completed_count, cancelled_count);
+        printCentered(summary, LIGHTCYAN);
+        printCenteredLine('-', LIGHTCYAN);
     }
 
     pause_screen();
@@ -1706,9 +2003,14 @@ void view_booking_history() {
 void check_overstay() {
     clear_screen();
     print_header();
-    setColor(LIGHTRED);
-    printf("\n*** OVERSTAY ALERTS ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("OVERSTAY ALERTS", LIGHTRED);
+    if (is_admin) {
+        printCentered("System-wide overstay monitoring", LIGHTCYAN);
+    } else {
+        printCentered("Your parking duration alerts", LIGHTCYAN);
+    }
+    printf("\n");
 
     int alerts_found = 0;
 
@@ -1721,38 +2023,66 @@ void check_overstay() {
 
             if (hours_passed > reservations[i].duration_hours) {
                 double overstay_hours = hours_passed - reservations[i].duration_hours;
-                setColor(LIGHTRED);
-                printf("\n*** OVERSTAY ALERT! ***");
-                setColor(WHITE);
-                printf("\nReservation ID: %d", reservations[i].reservation_id);
-                printf("\nSlot ID: %d", reservations[i].slot_id);
-                printf("\nBooked Duration: %.2f hours", reservations[i].duration_hours);
-                printf("\nTime Passed: %.2f hours", hours_passed);
-                setColor(LIGHTRED);
-                printf("\nOverstay: %.2f hours", overstay_hours);
+
+                printCenteredLine('!', LIGHTRED);
+                printCentered("OVERSTAY ALERT!", LIGHTRED);
+                printCenteredLine('!', LIGHTRED);
+
+                char alert_info[200];
+                sprintf(alert_info, "Reservation ID: %d", reservations[i].reservation_id);
+                printCentered(alert_info, WHITE);
+                sprintf(alert_info, "Slot Number: %d", reservations[i].slot_id);
+                printCentered(alert_info, WHITE);
+                sprintf(alert_info, "Booked Duration: %.1f hours", reservations[i].duration_hours);
+                printCentered(alert_info, WHITE);
+                sprintf(alert_info, "Time Elapsed: %.1f hours", hours_passed);
+                printCentered(alert_info, WHITE);
+                sprintf(alert_info, "Overstay Time: %.1f hours", overstay_hours);
+                printCentered(alert_info, LIGHTRED);
+
+                // Calculate additional charges
+                double base_rate;
+                for (int j = 0; j < slot_count; j++) {
+                    if (slots[j].slot_id == reservations[i].slot_id) {
+                        if (strcmp(slots[j].type, "bike") == 0) base_rate = BIKE_PRICE;
+                        else if (strcmp(slots[j].type, "car") == 0) base_rate = CAR_PRICE;
+                        else base_rate = TRUCK_PRICE;
+                        break;
+                    }
+                }
+                double additional_charge = overstay_hours * base_rate * 1.5; // 1.5x penalty
+                sprintf(alert_info, "Additional Penalty: $%.2f (1.5x rate)", additional_charge);
+                printCentered(alert_info, YELLOW);
 
                 if (is_admin) {
                     for (int j = 0; j < user_count; j++) {
                         if (users[j].user_id == reservations[i].user_id) {
-                            setColor(YELLOW);
-                            printf("\nUser: %s", users[j].name);
-                            printf("\nPhone: %s", users[j].phone);
+                            sprintf(alert_info, "Customer: %s", users[j].name);
+                            printCentered(alert_info, LIGHTCYAN);
+                            sprintf(alert_info, "Contact: %s", users[j].phone);
+                            printCentered(alert_info, LIGHTCYAN);
                             break;
                         }
                     }
                 }
-                setColor(LIGHTCYAN);
-                printf("\n----------------------------------------");
-                resetColor();
+
+                printf("\n");
+                printCenteredLine('-', LIGHTCYAN);
+                printf("\n");
                 alerts_found = 1;
             }
         }
     }
 
     if (!alerts_found) {
-        setColor(LIGHTGREEN);
-        printf("\nNo overstay alerts found!");
-        resetColor();
+        printCenteredLine('=', LIGHTGREEN);
+        printCentered("NO OVERSTAY ALERTS!", LIGHTGREEN);
+        printCenteredLine('=', LIGHTGREEN);
+        if (is_admin) {
+            printCentered("All customers are within their booked time slots.", LIGHTCYAN);
+        } else {
+            printCentered("You are within your booked parking duration.", LIGHTCYAN);
+        }
     }
 
     pause_screen();
@@ -1761,9 +2091,10 @@ void check_overstay() {
 void generate_user_report() {
     clear_screen();
     print_header();
-    setColor(LIGHTGREEN);
-    printf("\n*** MY DAILY REPORT ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("MY SMART PARK REPORT", LIGHTGREEN);
+    printCentered("Your complete parking statistics", LIGHTCYAN);
+    printf("\n");
 
     int total_bookings = 0, active_bookings = 0, cancelled_bookings = 0, completed_bookings = 0;
     double total_spent = 0.0;
@@ -1798,49 +2129,62 @@ void generate_user_report() {
         }
     }
 
-    setColor(YELLOW);
-    printf("\n*** YOUR STATISTICS ***");
-    printf("\n========================");
+    printCenteredLine('=', YELLOW);
+    printCentered("YOUR PARKING STATISTICS", YELLOW);
+    printCenteredLine('=', YELLOW);
 
-    setColor(WHITE);
-    printf("\nTotal Bookings: ");
-    setColor(LIGHTCYAN);
-    printf("%d", total_bookings);
+    char stats[200];
+    sprintf(stats, "Total Reservations Made: %d", total_bookings);
+    printCentered(stats, WHITE);
 
-    setColor(WHITE);
-    printf("\nActive Bookings: ");
-    setColor(LIGHTGREEN);
-    printf("%d", active_bookings);
+    sprintf(stats, "Currently Active: %d", active_bookings);
+    printCentered(stats, LIGHTGREEN);
 
-    setColor(WHITE);
-    printf("\nCompleted Bookings: ");
-    setColor(LIGHTBLUE);
-    printf("%d", completed_bookings);
+    sprintf(stats, "Successfully Completed: %d", completed_bookings);
+    printCentered(stats, LIGHTBLUE);
 
-    setColor(WHITE);
-    printf("\nCancelled Bookings: ");
-    setColor(LIGHTRED);
-    printf("%d", cancelled_bookings);
+    sprintf(stats, "Cancelled: %d", cancelled_bookings);
+    printCentered(stats, LIGHTRED);
 
-    setColor(WHITE);
-    printf("\nTotal Vehicles Registered: ");
-    setColor(LIGHTBLUE);
-    printf("%d", vehicle_count_user);
+    sprintf(stats, "Registered Vehicles: %d", vehicle_count_user);
+    printCentered(stats, LIGHTCYAN);
 
-    setColor(WHITE);
-    printf("\nTotal Amount Spent: $");
-    setColor(YELLOW);
-    printf("%.2f", total_spent);
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("FINANCIAL SUMMARY", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
 
-    setColor(WHITE);
-    printf("\nAverage Per Booking: $");
-    setColor(LIGHTCYAN);
-    printf("%.2f", total_bookings > 0 ? total_spent / total_bookings : 0.0);
+    sprintf(stats, "Total Amount Spent: $%.2f", total_spent);
+    printCentered(stats, LIGHTGREEN);
 
-    resetColor();
+    sprintf(stats, "Average Per Booking: $%.2f",
+            total_bookings > 0 ? total_spent / total_bookings : 0.0);
+    printCentered(stats, YELLOW);
+
+    // Calculate loyalty status
+    printf("\n");
+    printCenteredLine('-', MAGENTA);
+    if (total_spent >= 500) {
+        printCentered("LOYALTY STATUS: PLATINUM MEMBER", YELLOW);
+        printCentered("You're our most valued customer!", LIGHTGREEN);
+    } else if (total_spent >= 200) {
+        printCentered("LOYALTY STATUS: GOLD MEMBER", YELLOW);
+        printCentered("You're a frequent parker!", LIGHTGREEN);
+    } else if (total_spent >= 100) {
+        printCentered("LOYALTY STATUS: SILVER MEMBER", LIGHTCYAN);
+        printCentered("You're building your parking history!", LIGHTGREEN);
+    } else {
+        printCentered("LOYALTY STATUS: BRONZE MEMBER", LIGHTGRAY);
+        printCentered("Welcome to SMART PARK family!", LIGHTGREEN);
+    }
+    printCenteredLine('-', MAGENTA);
 
     pause_screen();
 }
+
+
+
+
 
 
 
@@ -1848,22 +2192,27 @@ void generate_user_report() {
 void admin_view_users() {
     clear_screen();
     print_header();
-    setColor(LIGHTBLUE);
-    printf("\n*** ALL USERS ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("USER MANAGEMENT DASHBOARD", LIGHTBLUE);
+    printCentered("Complete overview of all registered customers", LIGHTCYAN);
+    printf("\n");
 
     if (user_count == 0) {
-        setColor(YELLOW);
-        printf("\nNo users found!");
-        resetColor();
+        printCenteredLine('!', YELLOW);
+        printCentered("NO USERS REGISTERED YET!", YELLOW);
+        printCenteredLine('!', YELLOW);
+        printCentered("The system is ready to accept new registrations.", LIGHTCYAN);
         pause_screen();
         return;
     }
 
     setColor(LIGHTCYAN);
-    printf("\n%-10s %-20s %-15s %-30s %-20s %-10s",
-           "User ID", "Name", "Phone", "Email", "Reg Date", "Status");
-    printf("\n----------------------------------------------------------------------------------------------");
+    printf("%*s%-8s %-18s %-13s %-25s %-18s %-8s\n",
+           (CONSOLE_WIDTH - 90) / 2, "",
+           "ID", "Name", "Phone", "Email", "Reg Date", "Status");
+    printf("%*s", (CONSOLE_WIDTH - 90) / 2, "");
+    for (int i = 0; i < 90; i++) printf("=");
+    printf("\n");
     resetColor();
 
     for (int i = 0; i < user_count; i++) {
@@ -1872,26 +2221,32 @@ void admin_view_users() {
         } else {
             setColor(LIGHTRED);
         }
-        printf("\n%-10d %-20s %-15s %-30s %-20s %-10s",
+        printf("%*s%-8d %-18s %-13s %-25s %-18s %-8s\n",
+               (CONSOLE_WIDTH - 90) / 2, "",
                users[i].user_id, users[i].name, users[i].phone,
                users[i].email, users[i].reg_date,
                users[i].is_active ? "Active" : "Inactive");
     }
     resetColor();
 
-    setColor(LIGHTCYAN);
-    printf("\n\nTotal Users: %d | Active: ", user_count);
     int active_count = 0;
     for (int i = 0; i < user_count; i++) {
         if (users[i].is_active) active_count++;
     }
-    setColor(LIGHTGREEN);
-    printf("%d", active_count);
-    setColor(LIGHTCYAN);
-    printf(" | Inactive: ");
-    setColor(LIGHTRED);
-    printf("%d", user_count - active_count);
-    resetColor();
+
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("USER STATISTICS", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+    char summary[200];
+    sprintf(summary, "Total Registered: %d | Active: %d | Inactive: %d",
+            user_count, active_count, user_count - active_count);
+    printCentered(summary, WHITE);
+    sprintf(summary, "Active Rate: %.1f%% | Growth Potential: %d users",
+            user_count > 0 ? ((double)active_count/user_count)*100 : 0,
+            user_count - active_count);
+    printCentered(summary, LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
 
     pause_screen();
 }
@@ -1899,43 +2254,58 @@ void admin_view_users() {
 void admin_search_users() {
     clear_screen();
     print_header();
-    setColor(LIGHTGREEN);
-    printf("\n*** SEARCH USERS ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("ADVANCED USER SEARCH", LIGHTGREEN);
+    printCentered("Find customers by various criteria", LIGHTCYAN);
+    printf("\n");
 
-    setColor(WHITE);
-    printf("Search by:");
-    setColor(LIGHTGREEN);
-    printf("\n1. Name");
-    printf("\n2. Phone");
-    printf("\n3. Email");
-    printf("\n4. User ID");
-    resetColor();
-    printf("\nEnter choice: ");
+    printCenteredLine('-', WHITE);
+    printCentered("SEARCH OPTIONS", WHITE);
+    printCenteredLine('-', WHITE);
+    printCentered("1. Search by Name", LIGHTGREEN);
+    printCentered("2. Search by Phone", LIGHTGREEN);
+    printCentered("3. Search by Email", LIGHTGREEN);
+    printCentered("4. Search by User ID", LIGHTGREEN);
 
     int choice;
+    printf("\n");
+    setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 15) / 2, "");
+    printf("Enter choice: ");
+    resetColor();
     scanf("%d", &choice);
 
     char search_term[MAX_STRING];
     int search_id = 0;
 
+    printf("\n");
     if (choice == 4) {
         setColor(WHITE);
+        printf("%*s", (CONSOLE_WIDTH - 18) / 2, "");
         printf("Enter User ID: ");
         resetColor();
         scanf("%d", &search_id);
     } else {
         setColor(WHITE);
+        printf("%*s", (CONSOLE_WIDTH - 20) / 2, "");
         printf("Enter search term: ");
         resetColor();
         scanf("%s", search_term);
     }
 
     int found = 0;
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("SEARCH RESULTS", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+
     setColor(LIGHTCYAN);
-    printf("\n%-10s %-20s %-15s %-30s %-20s %-10s",
-           "User ID", "Name", "Phone", "Email", "Reg Date", "Status");
-    printf("\n----------------------------------------------------------------------------------------------");
+    printf("%*s%-8s %-18s %-13s %-25s %-18s %-8s\n",
+           (CONSOLE_WIDTH - 90) / 2, "",
+           "ID", "Name", "Phone", "Email", "Reg Date", "Status");
+    printf("%*s", (CONSOLE_WIDTH - 90) / 2, "");
+    for (int i = 0; i < 90; i++) printf("=");
+    printf("\n");
     resetColor();
 
     for (int i = 0; i < user_count; i++) {
@@ -1962,7 +2332,8 @@ void admin_search_users() {
             } else {
                 setColor(LIGHTRED);
             }
-            printf("\n%-10d %-20s %-15s %-30s %-20s %-10s",
+            printf("%*s%-8d %-18s %-13s %-25s %-18s %-8s\n",
+                   (CONSOLE_WIDTH - 90) / 2, "",
                    users[i].user_id, users[i].name, users[i].phone,
                    users[i].email, users[i].reg_date,
                    users[i].is_active ? "Active" : "Inactive");
@@ -1972,9 +2343,12 @@ void admin_search_users() {
     resetColor();
 
     if (!found) {
-        setColor(YELLOW);
-        printf("\nNo users found matching the search criteria!");
-        resetColor();
+        printf("\n");
+        printCentered("NO MATCHING USERS FOUND!", YELLOW);
+        printCentered("Try different search criteria or check spelling.", LIGHTCYAN);
+    } else {
+        printf("\n");
+        printCentered("Search completed successfully.", LIGHTGREEN);
     }
 
     pause_screen();
@@ -1983,12 +2357,14 @@ void admin_search_users() {
 void admin_delete_user() {
     clear_screen();
     print_header();
-    setColor(LIGHTRED);
-    printf("\n*** DELETE/DEACTIVATE USER ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("USER DEACTIVATION PORTAL", LIGHTRED);
+    printCentered("Safely deactivate customer accounts", YELLOW);
+    printf("\n");
 
     int user_id;
     setColor(WHITE);
+    printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
     printf("Enter User ID to deactivate: ");
     resetColor();
     scanf("%d", &user_id);
@@ -2002,38 +2378,105 @@ void admin_delete_user() {
     }
 
     if (user_index == -1) {
-        setColor(LIGHTRED);
-        printf("User not found!");
-        resetColor();
+        printf("\n");
+        printCentered("USER NOT FOUND!", LIGHTRED);
+        printCentered("Please verify the User ID and try again.", YELLOW);
         pause_screen();
         return;
     }
 
-    setColor(LIGHTCYAN);
-    printf("\nUser Details:");
-    printf("\nUser ID: %d", users[user_index].user_id);
-    printf("\nName: %s", users[user_index].name);
-    printf("\nPhone: %s", users[user_index].phone);
-    printf("\nEmail: %s", users[user_index].email);
-    printf("\nStatus: %s", users[user_index].is_active ? "Active" : "Inactive");
-    resetColor();
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("USER ACCOUNT DETAILS", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+    char details[200];
+    sprintf(details, "User ID: %d", users[user_index].user_id);
+    printCentered(details, WHITE);
+    sprintf(details, "Full Name: %s", users[user_index].name);
+    printCentered(details, WHITE);
+    sprintf(details, "Phone Number: %s", users[user_index].phone);
+    printCentered(details, WHITE);
+    sprintf(details, "Email Address: %s", users[user_index].email);
+    printCentered(details, WHITE);
+    sprintf(details, "Registration Date: %s", users[user_index].reg_date);
+    printCentered(details, LIGHTGRAY);
+    sprintf(details, "Current Status: %s", users[user_index].is_active ? "ACTIVE" : "INACTIVE");
+    if (users[user_index].is_active) {
+        printCentered(details, LIGHTGREEN);
+    } else {
+        printCentered(details, LIGHTRED);
+    }
+
+    if (!users[user_index].is_active) {
+        printf("\n");
+        printCentered("This user is already deactivated!", YELLOW);
+        pause_screen();
+        return;
+    }
+
+    // Check for active reservations
+    int active_reservations = 0;
+    for (int i = 0; i < reservation_count; i++) {
+        if (reservations[i].user_id == user_id &&
+            strcmp(reservations[i].status, "active") == 0) {
+            active_reservations++;
+        }
+    }
+
+    if (active_reservations > 0) {
+        printf("\n");
+        printCenteredLine('!', YELLOW);
+        char warning[100];
+        sprintf(warning, "WARNING: User has %d active reservation(s)!", active_reservations);
+        printCentered(warning, YELLOW);
+        printCentered("Deactivating will cancel all active bookings.", LIGHTRED);
+        printCenteredLine('!', YELLOW);
+    }
 
     char confirm;
+    printf("\n");
     setColor(YELLOW);
-    printf("\n\nAre you sure you want to deactivate this user? (y/n): ");
+    printf("%*s", (CONSOLE_WIDTH - 50) / 2, "");
+    printf("Confirm user deactivation? (y/n): ");
     resetColor();
     scanf(" %c", &confirm);
 
     if (confirm == 'y' || confirm == 'Y') {
         users[user_index].is_active = 0;
-        setColor(LIGHTGREEN);
-        printf("\nUser deactivated successfully!");
-        resetColor();
+
+        // Cancel active reservations
+        for (int i = 0; i < reservation_count; i++) {
+            if (reservations[i].user_id == user_id &&
+                strcmp(reservations[i].status, "active") == 0) {
+                strcpy(reservations[i].status, "cancelled");
+                get_current_time(reservations[i].end_time);
+
+                // Free up slots
+                for (int j = 0; j < slot_count; j++) {
+                    if (slots[j].slot_id == reservations[i].slot_id) {
+                        strcpy(slots[j].status, "available");
+                        slots[j].vehicle_id = 0;
+                        slots[j].user_id = 0;
+                        strcpy(slots[j].reserved_time, "");
+                        break;
+                    }
+                }
+            }
+        }
+
+        printf("\n");
+        printCenteredLine('=', LIGHTGREEN);
+        printCentered("USER DEACTIVATED SUCCESSFULLY!", LIGHTGREEN);
+        printCenteredLine('=', LIGHTGREEN);
+        if (active_reservations > 0) {
+            sprintf(details, "%d active reservation(s) have been cancelled.", active_reservations);
+            printCentered(details, LIGHTCYAN);
+        }
+        printCentered("User account is now inactive but data is preserved.", LIGHTCYAN);
         save_data();
     } else {
-        setColor(LIGHTCYAN);
-        printf("\nOperation cancelled!");
-        resetColor();
+        printf("\n");
+        printCentered("Deactivation cancelled. User remains active.", LIGHTCYAN);
     }
 
     pause_screen();
@@ -2042,13 +2485,15 @@ void admin_delete_user() {
 void admin_view_user_history() {
     clear_screen();
     print_header();
-    setColor(YELLOW);
-    printf("\n*** USER HISTORY ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("CUSTOMER PROFILE ANALYZER", YELLOW);
+    printCentered("Comprehensive customer activity report", LIGHTCYAN);
+    printf("\n");
 
     int user_id;
     setColor(WHITE);
-    printf("Enter User ID to view history: ");
+    printf("%*s", (CONSOLE_WIDTH - 35) / 2, "");
+    printf("Enter User ID for analysis: ");
     resetColor();
     scanf("%d", &user_id);
 
@@ -2061,100 +2506,157 @@ void admin_view_user_history() {
     }
 
     if (user_index == -1) {
-        setColor(LIGHTRED);
-        printf("User not found!");
-        resetColor();
+        printf("\n");
+        printCentered("CUSTOMER NOT FOUND!", LIGHTRED);
+        printCentered("Please verify the User ID.", YELLOW);
         pause_screen();
         return;
     }
 
-    setColor(LIGHTCYAN);
-    printf("\nUser: %s (ID: %d)", users[user_index].name, users[user_index].user_id);
-    printf("\nPhone: %s | Email: %s", users[user_index].phone, users[user_index].email);
-    printf("\nRegistration Date: %s | Status: %s",
+    printf("\n");
+    printCenteredLine('=', LIGHTCYAN);
+    printCentered("CUSTOMER PROFILE", LIGHTCYAN);
+    printCenteredLine('=', LIGHTCYAN);
+    char user_info[200];
+    sprintf(user_info, "%s (ID: %d)", users[user_index].name, users[user_index].user_id);
+    printCentered(user_info, LIGHTGREEN);
+    sprintf(user_info, "Contact: %s | Email: %s", users[user_index].phone, users[user_index].email);
+    printCentered(user_info, WHITE);
+    sprintf(user_info, "Member Since: %s | Status: %s",
            users[user_index].reg_date,
-           users[user_index].is_active ? "Active" : "Inactive");
-    resetColor();
+           users[user_index].is_active ? "ACTIVE" : "INACTIVE");
+    printCentered(user_info, LIGHTGRAY);
 
-    // Show vehicles
-    setColor(LIGHTGREEN);
-    printf("\n\n*** REGISTERED VEHICLES ***");
-    resetColor();
+    // Vehicle Analysis
+    printf("\n");
+    printCenteredLine('-', LIGHTGREEN);
+    printCentered("REGISTERED VEHICLES", LIGHTGREEN);
+    printCenteredLine('-', LIGHTGREEN);
     int vehicle_found = 0;
+    int bike_count = 0, car_count = 0, truck_count = 0;
+
     for (int i = 0; i < vehicle_count; i++) {
         if (vehicles[i].user_id == user_id) {
-            setColor(WHITE);
-            printf("\n- Vehicle ID: %d | %s (%s) - %s | Registered: %s",
-                   vehicles[i].vehicle_id, vehicles[i].type,
-                   vehicles[i].license_plate, vehicles[i].color,
-                   vehicles[i].reg_date);
+            char vehicle_info[200];
+            sprintf(vehicle_info, "%s %s (%s) - ID: %d - Reg: %s",
+                   vehicles[i].type, vehicles[i].license_plate, vehicles[i].color,
+                   vehicles[i].vehicle_id, vehicles[i].reg_date);
+
+            if (strcmp(vehicles[i].type, "bike") == 0) {
+                printCentered(vehicle_info, LIGHTGREEN);
+                bike_count++;
+            } else if (strcmp(vehicles[i].type, "car") == 0) {
+                printCentered(vehicle_info, LIGHTBLUE);
+                car_count++;
+            } else {
+                printCentered(vehicle_info, YELLOW);
+                truck_count++;
+            }
             vehicle_found = 1;
         }
     }
     if (!vehicle_found) {
-        setColor(YELLOW);
-        printf("\nNo vehicles registered");
+        printCentered("No vehicles registered", YELLOW);
+    } else {
+        char vehicle_summary[200];
+        sprintf(vehicle_summary, "Fleet: %d Bikes | %d Cars | %d Trucks = %d Total",
+                bike_count, car_count, truck_count, bike_count + car_count + truck_count);
+        printCentered(vehicle_summary, LIGHTCYAN);
     }
-    resetColor();
 
-    // Show reservations
-    setColor(LIGHTBLUE);
-    printf("\n\n*** RESERVATION HISTORY ***");
-    resetColor();
+    // Reservation Analysis
+    printf("\n");
+    printCenteredLine('-', LIGHTBLUE);
+    printCentered("RESERVATION HISTORY", LIGHTBLUE);
+    printCenteredLine('-', LIGHTBLUE);
     int reservation_found = 0;
+    int active_res = 0, completed_res = 0, cancelled_res = 0;
+    double total_booking_value = 0;
+
     for (int i = 0; i < reservation_count; i++) {
         if (reservations[i].user_id == user_id) {
-            if (strcmp(reservations[i].status, "active") == 0) {
-                setColor(LIGHTGREEN);
-            } else if (strcmp(reservations[i].status, "completed") == 0) {
-                setColor(LIGHTBLUE);
-            } else {
-                setColor(LIGHTRED);
-            }
-            printf("\n- Reservation %d: Slot %d | %s | $%.2f | Duration: %.1fh",
+            char res_info[200];
+            sprintf(res_info, "ID: %d | Slot %d | $%.2f | %.1fh | %s | %s",
                    reservations[i].reservation_id, reservations[i].slot_id,
-                   reservations[i].status, reservations[i].total_amount,
-                   reservations[i].duration_hours);
+                   reservations[i].total_amount, reservations[i].duration_hours,
+                   reservations[i].status, reservations[i].start_time);
+
+            if (strcmp(reservations[i].status, "active") == 0) {
+                printCentered(res_info, LIGHTGREEN);
+                active_res++;
+            } else if (strcmp(reservations[i].status, "completed") == 0) {
+                printCentered(res_info, LIGHTBLUE);
+                completed_res++;
+            } else {
+                printCentered(res_info, LIGHTRED);
+                cancelled_res++;
+            }
+            total_booking_value += reservations[i].total_amount;
             reservation_found = 1;
         }
     }
     if (!reservation_found) {
-        setColor(YELLOW);
-        printf("\nNo reservations found");
+        printCentered("No reservations found", YELLOW);
+    } else {
+        char res_summary[200];
+        sprintf(res_summary, "Bookings: %d Active | %d Completed | %d Cancelled",
+                active_res, completed_res, cancelled_res);
+        printCentered(res_summary, LIGHTCYAN);
+        sprintf(res_summary, "Total Booking Value: $%.2f", total_booking_value);
+        printCentered(res_summary, LIGHTGREEN);
     }
-    resetColor();
 
-    // Show payments
-    setColor(MAGENTA);
-    printf("\n\n*** PAYMENT HISTORY ***");
-    resetColor();
+    // Payment Analysis
+    printf("\n");
+    printCenteredLine('-', MAGENTA);
+    printCentered("PAYMENT HISTORY", MAGENTA);
+    printCenteredLine('-', MAGENTA);
     int payment_found = 0;
     double total_paid = 0;
+    int cash_count = 0, card_count = 0, mobile_count = 0;
+
     for (int i = 0; i < payment_count; i++) {
         if (payments[i].user_id == user_id) {
-            if (strcmp(payments[i].status, "completed") == 0) {
-                setColor(LIGHTGREEN);
-            } else {
-                setColor(YELLOW);
-            }
-            printf("\n- Payment %d: $%.2f via %s | %s | Date: %s",
+            char pay_info[200];
+            sprintf(pay_info, "ID: %d | $%.2f via %s | %s | %s",
                    payments[i].payment_id, payments[i].amount,
-                   payments[i].method, payments[i].status,
-                   payments[i].payment_date);
+                   payments[i].method, payments[i].status, payments[i].payment_date);
+
             if (strcmp(payments[i].status, "completed") == 0) {
+                printCentered(pay_info, LIGHTGREEN);
                 total_paid += payments[i].amount;
+
+                if (strcmp(payments[i].method, "cash") == 0) cash_count++;
+                else if (strcmp(payments[i].method, "card") == 0) card_count++;
+                else mobile_count++;
+            } else {
+                printCentered(pay_info, YELLOW);
             }
             payment_found = 1;
         }
     }
     if (!payment_found) {
-        setColor(YELLOW);
-        printf("\nNo payments found");
+        printCentered("No payments found", YELLOW);
     } else {
-        setColor(LIGHTGREEN);
-        printf("\n\nTotal Paid: $%.2f", total_paid);
+        char pay_summary[200];
+        sprintf(pay_summary, "Total Paid: $%.2f | Methods: %d Cash, %d Card, %d Mobile",
+                total_paid, cash_count, card_count, mobile_count);
+        printCentered(pay_summary, LIGHTGREEN);
+
+        // Customer value analysis
+        printf("\n");
+        printCenteredLine('-', YELLOW);
+        if (total_paid >= 500) {
+            printCentered("CUSTOMER TIER: PLATINUM (Premium Customer)", YELLOW);
+        } else if (total_paid >= 200) {
+            printCentered("CUSTOMER TIER: GOLD (Valuable Customer)", YELLOW);
+        } else if (total_paid >= 100) {
+            printCentered("CUSTOMER TIER: SILVER (Regular Customer)", LIGHTCYAN);
+        } else {
+            printCentered("CUSTOMER TIER: BRONZE (New Customer)", LIGHTGRAY);
+        }
+        printCenteredLine('-', YELLOW);
     }
-    resetColor();
 
     pause_screen();
 }
@@ -2162,23 +2664,30 @@ void admin_view_user_history() {
 void admin_view_all_vehicles() {
     clear_screen();
     print_header();
-    setColor(LIGHTCYAN);
-    printf("\n*** ALL VEHICLES WITH OWNER INFO ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("VEHICLE REGISTRY SYSTEM", LIGHTCYAN);
+    printCentered("Complete database of all registered vehicles", LIGHTGREEN);
+    printf("\n");
 
     if (vehicle_count == 0) {
-        setColor(YELLOW);
-        printf("\nNo vehicles found!");
-        resetColor();
+        printCenteredLine('!', YELLOW);
+        printCentered("NO VEHICLES REGISTERED!", YELLOW);
+        printCenteredLine('!', YELLOW);
+        printCentered("System is ready to accept vehicle registrations.", LIGHTCYAN);
         pause_screen();
         return;
     }
 
     setColor(LIGHTCYAN);
-    printf("\n%-8s %-8s %-12s %-12s %-18s %-13s %-18s",
-           "Veh ID", "Type", "License", "Color", "Owner Name", "Owner Phone", "Reg Date");
-    printf("\n-----------------------------------------------------------------------------------------");
+    printf("%*s%-6s %-8s %-12s %-10s %-15s %-12s %-15s\n",
+           (CONSOLE_WIDTH - 78) / 2, "",
+           "V-ID", "Type", "License", "Color", "Owner", "Phone", "Registered");
+    printf("%*s", (CONSOLE_WIDTH - 78) / 2, "");
+    for (int i = 0; i < 78; i++) printf("=");
+    printf("\n");
     resetColor();
+
+    int bike_count = 0, car_count = 0, truck_count = 0;
 
     for (int i = 0; i < vehicle_count; i++) {
         char owner_name[MAX_STRING] = "Unknown";
@@ -2192,25 +2701,48 @@ void admin_view_all_vehicles() {
             }
         }
 
-        // Color code by vehicle type
+        // Color code by vehicle type and count
         if (strcmp(vehicles[i].type, "bike") == 0) {
             setColor(LIGHTGREEN);
+            bike_count++;
         } else if (strcmp(vehicles[i].type, "car") == 0) {
             setColor(LIGHTBLUE);
+            car_count++;
         } else {
             setColor(YELLOW);
+            truck_count++;
         }
 
-        printf("\n%-8d %-8s %-12s %-12s %-18s %-13s %-18s",
+        printf("%*s%-6d %-8s %-12s %-10s %-15s %-12s %-15s\n",
+               (CONSOLE_WIDTH - 78) / 2, "",
                vehicles[i].vehicle_id, vehicles[i].type,
                vehicles[i].license_plate, vehicles[i].color,
                owner_name, owner_phone, vehicles[i].reg_date);
     }
     resetColor();
 
-    setColor(LIGHTCYAN);
-    printf("\n\nTotal Vehicles: %d", vehicle_count);
-    resetColor();
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("VEHICLE FLEET ANALYSIS", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+    char fleet_stats[200];
+    sprintf(fleet_stats, "Total Vehicles: %d", vehicle_count);
+    printCentered(fleet_stats, WHITE);
+    sprintf(fleet_stats, "Bikes: %d (%.1f%%) | Cars: %d (%.1f%%) | Trucks: %d (%.1f%%)",
+            bike_count, ((double)bike_count/vehicle_count)*100,
+            car_count, ((double)car_count/vehicle_count)*100,
+            truck_count, ((double)truck_count/vehicle_count)*100);
+    printCentered(fleet_stats, LIGHTCYAN);
+
+    // Most popular vehicle type
+    if (bike_count > car_count && bike_count > truck_count) {
+        printCentered("Most Popular: Bikes/Motorcycles", LIGHTGREEN);
+    } else if (car_count > truck_count) {
+        printCentered("Most Popular: Cars/SUVs", LIGHTBLUE);
+    } else {
+        printCentered("Most Popular: Trucks/Vans", YELLOW);
+    }
+    printCenteredLine('-', LIGHTCYAN);
 
     pause_screen();
 }
@@ -2218,9 +2750,10 @@ void admin_view_all_vehicles() {
 void admin_slot_usage_report() {
     clear_screen();
     print_header();
-    setColor(MAGENTA);
-    printf("\n*** SLOT USAGE REPORT ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("PARKING INFRASTRUCTURE ANALYTICS", MAGENTA);
+    printCentered("Real-time slot utilization and efficiency metrics", LIGHTCYAN);
+    printf("\n");
 
     int bike_available = 0, bike_occupied = 0, bike_reserved = 0;
     int car_available = 0, car_occupied = 0, car_reserved = 0;
@@ -2242,87 +2775,86 @@ void admin_slot_usage_report() {
         }
     }
 
-    setColor(LIGHTGREEN);
-    printf("\n*** BIKE SLOTS (Total: %d) ***", BIKE_SLOTS);
-    setColor(WHITE);
-    printf("\n   Available: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", bike_available, ((double)bike_available/BIKE_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Occupied: ");
-    setColor(LIGHTRED);
-    printf("%d (%.1f%%)", bike_occupied, ((double)bike_occupied/BIKE_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Reserved: ");
-    setColor(LIGHTBLUE);
-    printf("%d (%.1f%%)", bike_reserved, ((double)bike_reserved/BIKE_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Usage Rate: ");
-    setColor(YELLOW);
-    printf("%.1f%%", ((double)(bike_occupied + bike_reserved) / BIKE_SLOTS) * 100);
+    printCenteredLine('=', LIGHTGREEN);
+    printCentered("BIKE/MOTORCYCLE PARKING ZONE", LIGHTGREEN);
+    printCenteredLine('=', LIGHTGREEN);
+    char stats[200];
+    sprintf(stats, "Capacity: %d slots | Available: %d | Occupied: %d | Reserved: %d",
+            BIKE_SLOTS, bike_available, bike_occupied, bike_reserved);
+    printCentered(stats, WHITE);
+    sprintf(stats, "Utilization: %.1f%% | Efficiency: %.1f%% | Revenue/Hour: $%.2f",
+            ((double)(bike_occupied + bike_reserved) / BIKE_SLOTS) * 100,
+            ((double)bike_occupied / BIKE_SLOTS) * 100,
+            bike_occupied * BIKE_PRICE);
+    printCentered(stats, LIGHTCYAN);
 
-    setColor(LIGHTBLUE);
-    printf("\n\n*** CAR SLOTS (Total: %d) ***", CAR_SLOTS);
-    setColor(WHITE);
-    printf("\n   Available: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", car_available, ((double)car_available/CAR_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Occupied: ");
-    setColor(LIGHTRED);
-    printf("%d (%.1f%%)", car_occupied, ((double)car_occupied/CAR_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Reserved: ");
-    setColor(LIGHTBLUE);
-    printf("%d (%.1f%%)", car_reserved, ((double)car_reserved/CAR_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Usage Rate: ");
-    setColor(YELLOW);
-    printf("%.1f%%", ((double)(car_occupied + car_reserved) / CAR_SLOTS) * 100);
+    printf("\n");
+    printCenteredLine('=', LIGHTBLUE);
+    printCentered("CAR/SUV PARKING ZONE", LIGHTBLUE);
+    printCenteredLine('=', LIGHTBLUE);
+    sprintf(stats, "Capacity: %d slots | Available: %d | Occupied: %d | Reserved: %d",
+            CAR_SLOTS, car_available, car_occupied, car_reserved);
+    printCentered(stats, WHITE);
+    sprintf(stats, "Utilization: %.1f%% | Efficiency: %.1f%% | Revenue/Hour: $%.2f",
+            ((double)(car_occupied + car_reserved) / CAR_SLOTS) * 100,
+            ((double)car_occupied / CAR_SLOTS) * 100,
+            car_occupied * CAR_PRICE);
+    printCentered(stats, LIGHTCYAN);
 
-    setColor(YELLOW);
-    printf("\n\n*** TRUCK SLOTS (Total: %d) ***", TRUCK_SLOTS);
-    setColor(WHITE);
-    printf("\n   Available: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", truck_available, ((double)truck_available/TRUCK_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Occupied: ");
-    setColor(LIGHTRED);
-    printf("%d (%.1f%%)", truck_occupied, ((double)truck_occupied/TRUCK_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Reserved: ");
-    setColor(LIGHTBLUE);
-    printf("%d (%.1f%%)", truck_reserved, ((double)truck_reserved/TRUCK_SLOTS)*100);
-    setColor(WHITE);
-    printf("\n   Usage Rate: ");
-    setColor(YELLOW);
-    printf("%.1f%%", ((double)(truck_occupied + truck_reserved) / TRUCK_SLOTS) * 100);
+    printf("\n");
+    printCenteredLine('=', YELLOW);
+    printCentered("TRUCK/VAN PARKING ZONE", YELLOW);
+    printCenteredLine('=', YELLOW);
+    sprintf(stats, "Capacity: %d slots | Available: %d | Occupied: %d | Reserved: %d",
+            TRUCK_SLOTS, truck_available, truck_occupied, truck_reserved);
+    printCentered(stats, WHITE);
+    sprintf(stats, "Utilization: %.1f%% | Efficiency: %.1f%% | Revenue/Hour: $%.2f",
+            ((double)(truck_occupied + truck_reserved) / TRUCK_SLOTS) * 100,
+            ((double)truck_occupied / TRUCK_SLOTS) * 100,
+            truck_occupied * TRUCK_PRICE);
+    printCentered(stats, LIGHTCYAN);
 
-    setColor(LIGHTCYAN);
-    printf("\n\n*** OVERALL PARKING STATISTICS ***");
+    printf("\n");
+    printCenteredLine('-', MAGENTA);
+    printCentered("OVERALL FACILITY PERFORMANCE", MAGENTA);
+    printCenteredLine('-', MAGENTA);
+
     int total_slots = BIKE_SLOTS + CAR_SLOTS + TRUCK_SLOTS;
     int total_used = bike_occupied + bike_reserved + car_occupied + car_reserved + truck_occupied + truck_reserved;
     int total_available = bike_available + car_available + truck_available;
+    int total_occupied = bike_occupied + car_occupied + truck_occupied;
+    double total_revenue_per_hour = (bike_occupied * BIKE_PRICE) + (car_occupied * CAR_PRICE) + (truck_occupied * TRUCK_PRICE);
 
-    setColor(WHITE);
-    printf("\n   Total Slots: ");
-    setColor(LIGHTCYAN);
-    printf("%d", total_slots);
-    setColor(WHITE);
-    printf("\n   Total Available: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", total_available, ((double)total_available/total_slots)*100);
-    setColor(WHITE);
-    printf("\n   Total in Use: ");
-    setColor(LIGHTRED);
-    printf("%d (%.1f%%)", total_used, ((double)total_used/total_slots)*100);
-    setColor(WHITE);
-    printf("\n   Overall Occupancy Rate: ");
-    setColor(YELLOW);
-    printf("%.1f%%", ((double)total_used / total_slots) * 100);
+    sprintf(stats, "Total Capacity: %d slots | In Use: %d (%.1f%%) | Available: %d (%.1f%%)",
+            total_slots, total_used, ((double)total_used/total_slots)*100,
+            total_available, ((double)total_available/total_slots)*100);
+    printCentered(stats, WHITE);
 
-    resetColor();
+    sprintf(stats, "Occupancy Rate: %.1f%% | Current Revenue/Hour: $%.2f",
+            ((double)total_occupied / total_slots) * 100, total_revenue_per_hour);
+    printCentered(stats, LIGHTGREEN);
+
+    sprintf(stats, "Peak Capacity: $%.2f/hour | Daily Potential: $%.2f",
+            (BIKE_SLOTS * BIKE_PRICE) + (CAR_SLOTS * CAR_PRICE) + (TRUCK_SLOTS * TRUCK_PRICE),
+            ((BIKE_SLOTS * BIKE_PRICE) + (CAR_SLOTS * CAR_PRICE) + (TRUCK_SLOTS * TRUCK_PRICE)) * 24);
+    printCentered(stats, YELLOW);
+
+    // Performance indicators
+    printf("\n");
+    double occupancy_rate = ((double)total_occupied / total_slots) * 100;
+    if (occupancy_rate >= 80) {
+        printCentered("STATUS: EXCELLENT UTILIZATION", LIGHTGREEN);
+        printCentered("Facility is performing at optimal capacity", LIGHTCYAN);
+    } else if (occupancy_rate >= 60) {
+        printCentered("STATUS: GOOD UTILIZATION", LIGHTBLUE);
+        printCentered("Solid performance with room for growth", LIGHTCYAN);
+    } else if (occupancy_rate >= 40) {
+        printCentered("STATUS: MODERATE UTILIZATION", YELLOW);
+        printCentered("Consider marketing strategies to increase usage", LIGHTCYAN);
+    } else {
+        printCentered("STATUS: LOW UTILIZATION", LIGHTRED);
+        printCentered("Significant opportunity for improvement", LIGHTCYAN);
+    }
 
     pause_screen();
 }
@@ -2330,13 +2862,19 @@ void admin_slot_usage_report() {
 void admin_generate_daily_report() {
     clear_screen();
     print_header();
-    setColor(WHITE);
-    printf("\n*** COMPREHENSIVE SYSTEM REPORT ***\n");
-    resetColor();
+    printf("\n");
+    printCentered("SMART PARK EXECUTIVE DASHBOARD", WHITE);
+    printCentered("Comprehensive Business Intelligence Report", LIGHTGREEN);
+    printf("\n");
 
     char today[20];
     get_current_time(today);
+    char report_title[100];
+    sprintf(report_title, "Generated: %s | By: Administrator", today);
+    printCentered(report_title, LIGHTGRAY);
+    printCenteredLine('=', LIGHTCYAN);
 
+    // Calculate all metrics
     int total_users = user_count;
     int active_users = 0;
     int total_vehicles = vehicle_count;
@@ -2344,14 +2882,12 @@ void admin_generate_daily_report() {
     int completed_reservations = 0;
     int cancelled_reservations = 0;
     int completed_payments = 0;
-    double daily_revenue = 0.0;
+    double total_revenue = 0.0;
 
-    // Count active users
     for (int i = 0; i < user_count; i++) {
         if (users[i].is_active) active_users++;
     }
 
-    // Count reservations by status
     for (int i = 0; i < reservation_count; i++) {
         if (strcmp(reservations[i].status, "active") == 0) {
             active_reservations++;
@@ -2362,97 +2898,86 @@ void admin_generate_daily_report() {
         }
     }
 
-    // Calculate revenue
     for (int i = 0; i < payment_count; i++) {
         if (strcmp(payments[i].status, "completed") == 0) {
             completed_payments++;
-            daily_revenue += payments[i].amount;
+            total_revenue += payments[i].amount;
         }
     }
 
-    setColor(YELLOW);
-    printf("\n*** SYSTEM STATISTICS (Generated: %s) ***", today);
-    printf("\n================================================================");
-    resetColor();
+    printf("\n");
+    printCenteredLine('-', LIGHTBLUE);
+    printCentered("CUSTOMER BASE ANALYTICS", LIGHTBLUE);
+    printCenteredLine('-', LIGHTBLUE);
+    char metrics[200];
+    sprintf(metrics, "Total Customers: %d | Active: %d (%.1f%%) | Inactive: %d (%.1f%%)",
+            total_users, active_users,
+            total_users > 0 ? ((double)active_users/total_users)*100 : 0,
+            total_users - active_users,
+            total_users > 0 ? ((double)(total_users - active_users)/total_users)*100 : 0);
+    printCentered(metrics, WHITE);
 
-    setColor(LIGHTCYAN);
-    printf("\n\n*** USER MANAGEMENT STATISTICS ***");
-    setColor(WHITE);
-    printf("\n   Total Registered Users: ");
-    setColor(LIGHTCYAN);
-    printf("%d", total_users);
-    setColor(WHITE);
-    printf("\n   Active Users: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", active_users, total_users > 0 ? ((double)active_users/total_users)*100 : 0);
-    setColor(WHITE);
-    printf("\n   Inactive Users: ");
-    setColor(LIGHTRED);
-    printf("%d (%.1f%%)", total_users - active_users, total_users > 0 ? ((double)(total_users - active_users)/total_users)*100 : 0);
+    sprintf(metrics, "Customer Retention Rate: %.1f%% | Growth Potential: High",
+            total_users > 0 ? ((double)active_users/total_users)*100 : 0);
+    printCentered(metrics, LIGHTCYAN);
 
-    setColor(LIGHTBLUE);
-    printf("\n\n*** VEHICLE REGISTRY STATISTICS ***");
-    setColor(WHITE);
-    printf("\n   Total Registered Vehicles: ");
-    setColor(LIGHTBLUE);
-    printf("%d", total_vehicles);
-
+    printf("\n");
+    printCenteredLine('-', LIGHTGREEN);
+    printCentered("VEHICLE FLEET OVERVIEW", LIGHTGREEN);
+    printCenteredLine('-', LIGHTGREEN);
     int bikes = 0, cars = 0, trucks = 0;
     for (int i = 0; i < vehicle_count; i++) {
         if (strcmp(vehicles[i].type, "bike") == 0) bikes++;
         else if (strcmp(vehicles[i].type, "car") == 0) cars++;
         else trucks++;
     }
-    setColor(WHITE);
-    printf("\n   Bikes: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", bikes, total_vehicles > 0 ? ((double)bikes/total_vehicles)*100 : 0);
-    setColor(WHITE);
-    printf("\n   Cars: ");
-    setColor(LIGHTBLUE);
-    printf("%d (%.1f%%)", cars, total_vehicles > 0 ? ((double)cars/total_vehicles)*100 : 0);
-    setColor(WHITE);
-    printf("\n   Trucks: ");
-    setColor(YELLOW);
-    printf("%d (%.1f%%)", trucks, total_vehicles > 0 ? ((double)trucks/total_vehicles)*100 : 0);
 
-    setColor(MAGENTA);
-    printf("\n\n*** RESERVATION STATISTICS ***");
-    setColor(WHITE);
-    printf("\n   Total Reservations: ");
-    setColor(LIGHTCYAN);
-    printf("%d", reservation_count);
-    setColor(WHITE);
-    printf("\n   Active Reservations: ");
-    setColor(LIGHTGREEN);
-    printf("%d (%.1f%%)", active_reservations, reservation_count > 0 ? ((double)active_reservations/reservation_count)*100 : 0);
-    setColor(WHITE);
-    printf("\n   Completed Reservations: ");
-    setColor(LIGHTBLUE);
-    printf("%d (%.1f%%)", completed_reservations, reservation_count > 0 ? ((double)completed_reservations/reservation_count)*100 : 0);
-    setColor(WHITE);
-    printf("\n   Cancelled Reservations: ");
-    setColor(LIGHTRED);
-    printf("%d (%.1f%%)", cancelled_reservations, reservation_count > 0 ? ((double)cancelled_reservations/reservation_count)*100 : 0);
+    sprintf(metrics, "Total Registered Vehicles: %d", total_vehicles);
+    printCentered(metrics, WHITE);
+    sprintf(metrics, "Distribution: %d Bikes (%.1f%%) | %d Cars (%.1f%%) | %d Trucks (%.1f%%)",
+            bikes, total_vehicles > 0 ? ((double)bikes/total_vehicles)*100 : 0,
+            cars, total_vehicles > 0 ? ((double)cars/total_vehicles)*100 : 0,
+            trucks, total_vehicles > 0 ? ((double)trucks/total_vehicles)*100 : 0);
+    printCentered(metrics, LIGHTCYAN);
+    sprintf(metrics, "Vehicles per Customer: %.1f | Fleet Diversity: %s",
+            total_users > 0 ? (double)total_vehicles/total_users : 0,
+            (bikes > 0 && cars > 0 && trucks > 0) ? "Excellent" : "Good");
+    printCentered(metrics, LIGHTGREEN);
 
-    setColor(YELLOW);
-    printf("\n\n*** FINANCIAL STATISTICS ***");
-    setColor(WHITE);
-    printf("\n   Total Payments Processed: ");
-    setColor(LIGHTCYAN);
-    printf("%d", completed_payments);
-    setColor(WHITE);
-    printf("\n   Total Revenue Generated: $");
-    setColor(LIGHTGREEN);
-    printf("%.2f", daily_revenue);
-    setColor(WHITE);
-    printf("\n   Average Transaction Value: $");
-    setColor(YELLOW);
-    printf("%.2f", completed_payments > 0 ? daily_revenue / completed_payments : 0.0);
+    printf("\n");
+    printCenteredLine('-', MAGENTA);
+    printCentered("BOOKING & RESERVATION METRICS", MAGENTA);
+    printCenteredLine('-', MAGENTA);
+    int total_reservations = reservation_count;
+    sprintf(metrics, "Total Bookings: %d | Success Rate: %.1f%%",
+            total_reservations,
+            total_reservations > 0 ? ((double)(active_reservations + completed_reservations)/total_reservations)*100 : 0);
+    printCentered(metrics, WHITE);
+    sprintf(metrics, "Active: %d | Completed: %d | Cancelled: %d",
+            active_reservations, completed_reservations, cancelled_reservations);
+    printCentered(metrics, LIGHTCYAN);
+    sprintf(metrics, "Average Bookings per Customer: %.1f",
+            total_users > 0 ? (double)total_reservations/total_users : 0);
+    printCentered(metrics, LIGHTGREEN);
 
-    // Payment method breakdown
-    int cash_payments = 0, card_payments = 0, bkash_payments = 0, nagad_payments = 0;
-    double cash_amount = 0, card_amount = 0, bkash_amount = 0, nagad_amount = 0;
+    printf("\n");
+    printCenteredLine('-', YELLOW);
+    printCentered("FINANCIAL PERFORMANCE", YELLOW);
+    printCenteredLine('-', YELLOW);
+    sprintf(metrics, "Total Revenue Generated: $%.2f", total_revenue);
+    printCentered(metrics, LIGHTGREEN);
+    sprintf(metrics, "Completed Transactions: %d | Payment Success Rate: %.1f%%",
+            completed_payments,
+            payment_count > 0 ? ((double)completed_payments/payment_count)*100 : 0);
+    printCentered(metrics, WHITE);
+    sprintf(metrics, "Average Transaction Value: $%.2f | Revenue per Customer: $%.2f",
+            completed_payments > 0 ? total_revenue / completed_payments : 0.0,
+            total_users > 0 ? total_revenue / total_users : 0.0);
+    printCentered(metrics, LIGHTCYAN);
+
+    // Payment method analysis
+    int cash_payments = 0, card_payments = 0, mobile_payments = 0;
+    double cash_amount = 0, card_amount = 0, mobile_amount = 0;
 
     for (int i = 0; i < payment_count; i++) {
         if (strcmp(payments[i].status, "completed") == 0) {
@@ -2462,57 +2987,63 @@ void admin_generate_daily_report() {
             } else if (strcmp(payments[i].method, "card") == 0) {
                 card_payments++;
                 card_amount += payments[i].amount;
-            } else if (strcmp(payments[i].method, "bkash") == 0) {
-                bkash_payments++;
-                bkash_amount += payments[i].amount;
-            } else if (strcmp(payments[i].method, "nagad") == 0) {
-                nagad_payments++;
-                nagad_amount += payments[i].amount;
+            } else {
+                mobile_payments++;
+                mobile_amount += payments[i].amount;
             }
         }
     }
 
-    setColor(WHITE);
-    printf("\n   Payment Methods Breakdown:");
-    printf("\n     Cash: %d payments ($%.2f)", cash_payments, cash_amount);
-    printf("\n     Card: %d payments ($%.2f)", card_payments, card_amount);
-    printf("\n     bKash: %d payments ($%.2f)", bkash_payments, bkash_amount);
-    printf("\n     Nagad: %d payments ($%.2f)", nagad_payments, nagad_amount);
+    sprintf(metrics, "Payment Methods: Cash: %d ($%.2f) | Card: %d ($%.2f) | Mobile: %d ($%.2f)",
+            cash_payments, cash_amount, card_payments, card_amount, mobile_payments, mobile_amount);
+    printCentered(metrics, LIGHTBLUE);
 
-    // Slot usage summary
-    int total_slots_used = 0;
+    // Calculate current facility utilization
+    int total_occupied = 0, total_reserved = 0;
     for (int i = 0; i < slot_count; i++) {
-        if (strcmp(slots[i].status, "occupied") == 0 || strcmp(slots[i].status, "reserved") == 0) {
-            total_slots_used++;
-        }
+        if (strcmp(slots[i].status, "occupied") == 0) total_occupied++;
+        else if (strcmp(slots[i].status, "reserved") == 0) total_reserved++;
     }
 
-    setColor(LIGHTCYAN);
-    printf("\n\n*** PARKING INFRASTRUCTURE STATUS ***");
-    setColor(WHITE);
-    printf("\n   Total Parking Slots: ");
-    setColor(LIGHTCYAN);
-    printf("%d", slot_count);
-    setColor(WHITE);
-    printf("\n   Slots Currently in Use: ");
-    setColor(LIGHTRED);
-    printf("%d", total_slots_used);
-    setColor(WHITE);
-    printf("\n   Available Slots: ");
-    setColor(LIGHTGREEN);
-    printf("%d", slot_count - total_slots_used);
-    setColor(WHITE);
-    printf("\n   Current Occupancy Rate: ");
-    setColor(YELLOW);
-    printf("%.1f%%", ((double)total_slots_used / slot_count) * 100);
+    double current_utilization = ((double)(total_occupied + total_reserved) / slot_count) * 100;
+    double revenue_efficiency = ((double)total_occupied / slot_count) * 100;
 
-    setColor(LIGHTCYAN);
-    printf("\n\n================================================================");
-    printf("\n            End of System Report");
-    printf("\n================================================================");
-    resetColor();
+    printf("\n");
+    printCenteredLine('-', LIGHTCYAN);
+    printCentered("OPERATIONAL EFFICIENCY", LIGHTCYAN);
+    printCenteredLine('-', LIGHTCYAN);
+    sprintf(metrics, "Current Facility Utilization: %.1f%% | Revenue Efficiency: %.1f%%",
+            current_utilization, revenue_efficiency);
+    printCentered(metrics, WHITE);
+    sprintf(metrics, "Slots in Use: %d | Available Capacity: %d | Peak Potential: $%.2f/day",
+            total_occupied + total_reserved, slot_count - total_occupied - total_reserved,
+            ((BIKE_SLOTS * BIKE_PRICE) + (CAR_SLOTS * CAR_PRICE) + (TRUCK_SLOTS * TRUCK_PRICE)) * 24);
+    printCentered(metrics, LIGHTCYAN);
+
+    // Business performance indicators
+    printf("\n");
+    printCenteredLine('*', YELLOW);
+    if (current_utilization >= 70 && total_revenue >= 1000) {
+        printCentered("BUSINESS STATUS: EXCELLENT PERFORMANCE", LIGHTGREEN);
+        printCentered("Facility is operating at optimal levels", LIGHTCYAN);
+    } else if (current_utilization >= 50 && total_revenue >= 500) {
+        printCentered("BUSINESS STATUS: STRONG PERFORMANCE", LIGHTBLUE);
+        printCentered("Good operational metrics with growth opportunities", LIGHTCYAN);
+    } else if (current_utilization >= 30 && total_revenue >= 200) {
+        printCentered("BUSINESS STATUS: MODERATE PERFORMANCE", YELLOW);
+        printCentered("Steady progress, focus on customer acquisition", LIGHTCYAN);
+    } else {
+        printCentered("BUSINESS STATUS: BUILDING PHASE", LIGHTRED);
+        printCentered("Early stage, implement growth strategies", LIGHTCYAN);
+    }
+    printCenteredLine('*', YELLOW);
+
+    printf("\n");
+    printCenteredLine('=', LIGHTCYAN);
+    printCentered("END OF EXECUTIVE REPORT", LIGHTCYAN);
+    sprintf(metrics, "SMART PARK System v2.0 | Report ID: %s", today);
+    printCentered(metrics, LIGHTGRAY);
+    printCenteredLine('=', LIGHTCYAN);
 
     pause_screen();
 }
-
-
