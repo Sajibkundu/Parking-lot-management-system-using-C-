@@ -3020,7 +3020,7 @@ void admin_generate_daily_report() {
             ((BIKE_SLOTS * BIKE_PRICE) + (CAR_SLOTS * CAR_PRICE) + (TRUCK_SLOTS * TRUCK_PRICE)) * 24);
     printCentered(metrics, LIGHTCYAN);
 
-    // Business performance indicators
+    // Business performance indicators.
     printf("\n");
     printCenteredLine('*', YELLOW);
     if (current_utilization >= 70 && total_revenue >= 1000) {
